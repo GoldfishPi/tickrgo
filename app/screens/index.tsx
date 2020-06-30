@@ -16,7 +16,7 @@ export type RootStackParamList = {
 
 const Stack = createStackNavigator<RootStackParamList>();
 const Screens: FC<ScreensProps> = ({}) => {
-    const {user, loginToken} = useUser();
+    const {dispatch, state} = useUser();
     useEffect(() => {
         (async () => {
             const token = await AsyncStorage.getItem('token');
@@ -24,21 +24,21 @@ const Screens: FC<ScreensProps> = ({}) => {
             console.log('got token??', token);
             console.log('got env??', env);
             if (token && env) {
-                const auth = await loginToken(token, env);
-                console.log('authed??', auth);
+                // const auth = await loginToken(token, env);
+                // console.log('authed??', auth);
             }
         })();
-    }, [loginToken]);
+    }, [dispatch]);
     useEffect(() => {
-        if (!user) {
+        if (!state.userMeta) {
             return;
         }
-        AsyncStorage.setItem('token', user.user.token);
+        AsyncStorage.setItem('token', state.userMeta?.user?.token);
         AsyncStorage.setItem('env', 'spectrum');
-    }, [user]);
+    }, [state]);
     return (
         <Stack.Navigator>
-            {user ? (
+            {state.userMeta?.user ? (
                 <Stack.Screen name="Dashboard" component={DashboardScreens} />
             ) : (
                 <>

@@ -11,9 +11,17 @@ interface LoginScreenProps
     extends StackScreenProps<RootStackParamList, 'Login'> {}
 
 const LoginScreen: FC<LoginScreenProps> = ({}) => {
-    const {login} = useUser();
+    const {dispatch} = useUser();
     const {values, handleChange, handleSubmit} = useFormik({
         async onSubmit() {
+            dispatch({
+                type: 'SIGN_IN_REQUEST',
+                payload: {
+                    username: 'app+spectrum@tickr.com',
+                    password: 'spectrumTickr!',
+                    env: 'spectrum',
+                },
+            });
             // const auth = await login(username, password, env);
             // console.log('success??', auth);
         },

@@ -1,51 +1,118 @@
-import React from 'react';
+import React, {useReducer, createContext, useCallback} from 'react';
 import sjcl from 'sjcl';
 import pcrypt from '../bs/pcrypt';
 import {useApi} from './ApiProvider';
 
-type User = any | false;
-interface LoginResponse {
-    success: boolean;
-    token?: string;
-}
-interface UserState {
-    user: User;
-    login: (
-        username: string,
-        password: string,
-        client: string,
-    ) => Promise<LoginResponse>;
-    loginToken: (token: string, env: string) => Promise<LoginResponse>;
-    logout: () => void;
-    getDefaultMsid: () => string;
-    msId?: number;
-    defaultBrandId?: number;
+type Action =
+    | {
+          type: 'SIGN_IN_REQUEST';
+          payload: {username: string; password: string; env: string};
+      }
+    | {
+          type: 'SIGN_IN_SUCCESS';
+          payload: any;
+      }
+    | {
+          type: 'SIGN_IN_FAILURE';
+      }
+    | {
+          type: 'SIGN_OUT';
+      }
+    | {
+          type: 'SIGN_IN_TOKEN_REQUEST';
+          payload: {env: string; token: string};
+      }
+    | {
+          type: 'SIGN_IN_TOKEN_SUCCESS';
+          payload: any;
+      }
+    | {
+          type: 'SIGN_IN_TOKEN_FAILURE';
+      };
+type State = {
+    loading: boolean;
+    userMeta: any;
+};
+
+interface Context {
+    dispatch: (action: Action) => void;
+    state: State;
 }
 
-const UserContext = React.createContext<UserState>({
-    user: false,
-    login: async () => ({success: false}),
-    loginToken: async () => ({success: false}),
-    logout: () => {},
-    getDefaultMsid: () => '',
+const defaultState: State = {
+    loading: false,
+    userMeta: {},
+};
+
+const UserContext = createContext<Context>({
+    dispatch: () => {},
+    state: defaultState,
 });
 
 export const UserProvider: React.FC = ({children}) => {
-    const [user, setUser] = React.useState<User>(false);
-    const [msId, setMsId] = React.useState<number>();
-    const [defaultBrandId, setDefaultBrandId] = React.useState<number>();
     const {api} = useApi();
 
-    const state: UserState = {
-        user,
-        msId,
-        defaultBrandId,
-        async login(username, password, client) {
+    const reducer = (state: State, action: Action): State => {
+        switch (action.type) {
+            case 'SIGN_IN_REQUEST':
+                signInAction(
+                    action.payload.env,
+                    action.payload.username,
+                    action.payload.password,
+                );
+                return {
+                    ...state,
+                    loading: true,
+                };
+            case 'SIGN_IN_SUCCESS':
+                return {
+                    ...state,
+                    loading: false,
+                    userMeta: action.payload,
+                };
+            case 'SIGN_IN_FAILURE':
+                return {
+                    ...state,
+                    loading: false,
+                };
+            case 'SIGN_IN_TOKEN_REQUEST':
+                signInTokenAction(action.payload.env, action.payload.token);
+                return {
+                    ...state,
+                    loading: true,
+                };
+            case 'SIGN_IN_TOKEN_SUCCESS':
+                return {
+                    ...state,
+                    loading: false,
+                    userMeta: action.payload,
+                };
+            case 'SIGN_IN_TOKEN_FAILURE':
+                return {
+                    ...state,
+                    loading: false,
+                    userMeta: false,
+                };
+            case 'SIGN_OUT':
+                return {
+                    ...state,
+                    loading: false,
+                    userMeta: false,
+                };
+            default:
+                return state;
+        }
+    };
+
+    const signInAction = useCallback(
+        async (env: string, username: string, password: string) => {
+            console.log('sign in action lol');
+
             const saltRes = await api.get(`users/${username}/salt`);
             let salt_str: string = saltRes.data;
 
             var split = salt_str.split(':');
-            var iter = parseInt(split[0]);
+            var iter = parseInt(split[0], 10);
             var salt_base64 = split[1];
 
             var passbits = sjcl.codec.utf8String.toBits(
@@ -60,60 +127,50 @@ export const UserProvider: React.FC = ({children}) => {
                 console.log('trying login');
                 const auth = pcrypt.gen_auth(username, res);
                 api.defaults.headers.common.Authorization = auth;
-                var login = await api.post(`/users/auth/full?domain=${client}`);
+                var login = await api.post(`/users/auth/full?domain=${env}`);
                 api.defaults.headers.common.Authorization =
                     login.data.user.token;
 
-                setUser(login.data);
-                setMsId(login.data.user.marketspaces[0].id);
-                setDefaultBrandId(
-                    login.data.user.marketspaces[0].meta.default_brand_id,
-                );
-                return {
-                    success: true,
-                    token: login.data.user.token,
-                };
+                dispatch({
+                    type: 'SIGN_IN_SUCCESS',
+                    payload: login.data,
+                });
             } catch (error) {
-                console.error(error);
-                return {
-                    success: false,
-                };
+                dispatch({
+                    type: 'SIGN_IN_FAILURE',
+                });
             }
         },
-        async loginToken(token, client) {
+        [api],
+    );
+
+    const [state, dispatch] = useReducer(reducer, defaultState);
+
+    const signInTokenAction = useCallback(
+        async (env: string, token: string) => {
+            api.defaults.headers.common.Authorization = token;
+
             try {
-                api.defaults.headers.common.Authorization = token;
-
                 const login = await api.post(
-                    `/users/auth/full?token=1&domain=${client}`,
+                    `/users/auth/full?token=1&domain=${env}`,
                 );
-
-                setUser(login.data);
-                setMsId(login.data.user.marketspaces[0].id);
-                setDefaultBrandId(
-                    login.data.user.marketspaces[0].meta.default_brand_id,
-                );
-                return {
-                    success: true,
-                    token: login.data.user.token,
-                };
+                dispatch({
+                    type: 'SIGN_IN_TOKEN_SUCCESS',
+                    payload: login.data,
+                });
             } catch (e) {
-                return {
-                    success: false,
-                };
+                dispatch({
+                    type: 'SIGN_IN_TOKEN_FAILURE',
+                });
             }
         },
-        async logout() {
-            setUser(false);
-        },
-        getDefaultMsid() {
-            if (user) {
-                return user.user.marketspaces[0].id;
-            }
-        },
-    };
+        [api],
+    );
+
     return (
-        <UserContext.Provider value={state}>{children}</UserContext.Provider>
+        <UserContext.Provider value={{state, dispatch}}>
+            {children}
+        </UserContext.Provider>
     );
 };
 
