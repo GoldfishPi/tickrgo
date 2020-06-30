@@ -24,8 +24,13 @@ const Screens: FC<ScreensProps> = ({}) => {
             console.log('got token??', token);
             console.log('got env??', env);
             if (token && env) {
-                // const auth = await loginToken(token, env);
-                // console.log('authed??', auth);
+                dispatch({
+                    type: 'SIGN_IN_TOKEN_REQUEST',
+                    payload: {
+                        token,
+                        env,
+                    },
+                });
             }
         })();
     }, [dispatch]);

@@ -106,8 +106,6 @@ export const UserProvider: React.FC = ({children}) => {
 
     const signInAction = useCallback(
         async (env: string, username: string, password: string) => {
-            console.log('sign in action lol');
-
             const saltRes = await api.get(`users/${username}/salt`);
             let salt_str: string = saltRes.data;
 
@@ -124,7 +122,6 @@ export const UserProvider: React.FC = ({children}) => {
             res = sjcl.codec.base64.fromBits(res);
 
             try {
-                console.log('trying login');
                 const auth = pcrypt.gen_auth(username, res);
                 api.defaults.headers.common.Authorization = auth;
                 var login = await api.post(`/users/auth/full?domain=${env}`);
@@ -143,8 +140,6 @@ export const UserProvider: React.FC = ({children}) => {
         },
         [api],
     );
-
-    const [state, dispatch] = useReducer(reducer, defaultState);
 
     const signInTokenAction = useCallback(
         async (env: string, token: string) => {
@@ -166,6 +161,8 @@ export const UserProvider: React.FC = ({children}) => {
         },
         [api],
     );
+
+    const [state, dispatch] = useReducer(reducer, defaultState);
 
     return (
         <UserContext.Provider value={{state, dispatch}}>
