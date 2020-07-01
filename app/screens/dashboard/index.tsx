@@ -1,10 +1,10 @@
 import React, {FC, useEffect, useState} from 'react';
-import {Text} from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import {useApi} from '../../util/providers/ApiProvider';
-import {View} from 'native-base';
-import {BarChart, Grid, XAxis} from 'react-native-svg-charts';
+import {View, Text} from 'native-base';
+import {BarChart, Grid, YAxis} from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
-import moment from 'moment';
+import Carousel from 'react-native-snap-carousel';
 
 interface DashboardScreensProps {}
 
@@ -18,36 +18,71 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                 dates: 'now-7d/d',
             },
             options: {
-                mixins: [{type: 'newsVolume'}],
-                obj: true,
+                mixins: [
+                    {type: 'newsVolume'},
+                    {type: 'twitterVolume'},
+                    {type: 'redditVolume'},
+                ],
             },
-        })
-            .then((res) => {
-                setData(res.data.newsVolume.primary);
-            })
-            .catch((e) => console.log('fail :(', e));
+        }).then((res) => {
+            setData(res.data);
+        });
     }, [api]);
+
+    const renderItem = ({item}: any) => {
+        console.log('got item', item);
+        return (
+            <>
+                <Text>{item.type}</Text>
+                <View
+                    style={styles.graphContainer}>
+                    <YAxis
+                        data={item.data}
+                        yAccessor={(d: any) => d.item.val}
+                        svg={{
+                            fill: 'grey',
+                            fontSize: 10,
+                        }}
+                    />
+                    <BarChart
+                        style={styles.graph}
+                        data={item.data}
+                        contentInset={{top: 30, bottom: 30}}
+                        curve={shape.curveNatural}
+                        yAccessor={(d: any) => d.item.val}
+                        svg={{fill: 'rgba(134, 65, 244, 0.8)'}}>
+                        <Grid />
+                    </BarChart>
+                </View>
+            </>
+        );
+    };
+
     return (
-        <View style={{height: 200, padding: 20}}>
-            <BarChart
-                style={{height: 200}}
-                data={data}
-                contentInset={{top: 30, bottom: 30}}
-                curve={shape.curveNatural}
-                yAccessor={({item}) => item.val}
-                svg={{fill: 'rgba(134, 65, 244, 0.8)'}}>
-                <Grid />
-            </BarChart>
-            <XAxis
-                style={{marginHorizontal: -10}}
-                contentInset={{left: 10, right: 10}}
-                data={data}
-                formatLabel={(period) => moment(period).format('DD')}
-                xAccessor={({item}) => item.period}
-                svg={{fontSize: 10, fill: 'black'}}
-            />
-        </View>
+        <>
+            <View>
+                <Carousel
+                    data={data}
+                    renderItem={renderItem}
+                    sliderWidth={Dimensions.get('screen').width}
+                    itemWidth={Dimensions.get('screen').width}
+                />
+            </View>
+        </>
     );
 };
+
+const styles = StyleSheet.create({
+    graphContainer: {
+
+                        padding: 20,
+                        flexDirection: 'row',
+                        minHeight: 200,
+                        minWidth: 200,
+                    },
+    graph: {
+height: 200, flexGrow: 1
+    }
+})
 
 export default DashboardScreens;
