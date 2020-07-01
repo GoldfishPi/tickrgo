@@ -15,7 +15,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
             },
             options: {
                 mixins: [{type: 'newsVolume'}],
-                obj:true,
+                obj: true,
             },
         })
             .then((res) => {
