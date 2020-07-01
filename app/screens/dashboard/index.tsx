@@ -65,7 +65,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     );
 };
 
-const DataCard = ({ item }: any) => {
+const DataCard = ({item}: any) => {
     const [width, setWidth] = useState(0);
     return (
         <Card
