@@ -121,12 +121,14 @@ export const UserProvider: React.FC = ({children}) => {
 
             res = sjcl.codec.base64.fromBits(res);
 
+            const auth = pcrypt.gen_auth(username, res);
+            api.defaults.headers.common.Authorization = auth;
+
             try {
-                const auth = pcrypt.gen_auth(username, res);
-                api.defaults.headers.common.Authorization = auth;
-                var login = await api.post(`/users/auth/full?domain=${env}`);
-                api.defaults.headers.common.Authorization =
-                    login.data.user.token;
+                const login = await api.post(`/users/auth/full?domain=${env}`);
+                api.defaults.headers.common.Authorization = pcrypt.gen_auth(
+                    login.data.user.token,
+                );
 
                 dispatch({
                     type: 'SIGN_IN_SUCCESS',
@@ -143,7 +145,7 @@ export const UserProvider: React.FC = ({children}) => {
 
     const signInTokenAction = useCallback(
         async (env: string, token: string) => {
-            api.defaults.headers.common.Authorization = token;
+            api.defaults.headers.common.Authorization = pcrypt.gen_auth(token);
 
             try {
                 const login = await api.post(
