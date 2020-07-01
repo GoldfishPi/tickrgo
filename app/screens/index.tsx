@@ -1,14 +1,12 @@
-import React, {FC, useEffect} from 'react';
-import DashboardScreens from './dashboard';
+import AsyncStorage from '@react-native-community/async-storage';
 import {createStackNavigator} from '@react-navigation/stack';
+import React, {FC, useEffect} from 'react';
+import {Appbar} from 'react-native-paper';
+import {useUser} from '../util';
+import LoadingScreen from './auth/Loading';
 import LoginScreen from './auth/Login';
 import SignUpScreen from './auth/SignUp';
-import {useUser} from '../util';
-import AsyncStorage from '@react-native-community/async-storage';
-import LoadingScreen from './auth/Loading';
-import {View} from 'react-native';
-import {Appbar, Avatar} from 'react-native-paper';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import DashboardScreens from './dashboard';
 
 interface ScreensProps {}
 
