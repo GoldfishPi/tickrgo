@@ -3,18 +3,24 @@ import React from 'react';
 import Screens from './app/screens';
 import {NavigationContainer, DarkTheme} from '@react-navigation/native';
 import {TickrProviders} from './app/util';
+import {
+    Provider as PaperProvider,
+    DarkTheme as PaperDarkTheme,
+} from 'react-native-paper';
 declare const global: {HermesInternal: null | {}};
 
 const App = () => {
     return (
-        <TickrProviders>
-            <NavigationContainer
-                theme={{
-                    ...DarkTheme,
-                }}>
-                <Screens />
-            </NavigationContainer>
-        </TickrProviders>
+        <PaperProvider theme={PaperDarkTheme}>
+            <TickrProviders>
+                <NavigationContainer
+                    theme={{
+                        ...DarkTheme,
+                    }}>
+                    <Screens />
+                </NavigationContainer>
+            </TickrProviders>
+        </PaperProvider>
     );
 };
 
