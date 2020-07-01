@@ -1,12 +1,27 @@
 import React, {FC, useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {useApi} from '../../util/providers/ApiProvider';
-import {BarChart, Grid, YAxis} from 'react-native-svg-charts';
-import * as shape from 'd3-shape';
 import Carousel from 'react-native-snap-carousel';
-import {Text} from 'react-native-paper';
+import {Text, Card} from 'react-native-paper';
+import {ProgressChart, LineChart} from 'react-native-chart-kit';
+import moment from 'moment';
 
 interface DashboardScreensProps {}
+
+const chartConfig: any = {
+    backgroundGradientFrom: '#1E2923',
+    backgroundGradientFromOpacity: 0,
+    backgroundGradientTo: '#08130D',
+    backgroundGradientToOpacity: 0.5,
+    color: (opacity = 1) => `rgba(131, 167, 234, ${opacity})`,
+    strokeWidth: 2, // optional, default 3
+    barPercentage: 0.5,
+    useShadowColorFromDataset: false, // optional
+};
+const progressData = {
+    labels: [], // optional
+    data: [0.6],
+};
 
 const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     const {api} = useApi();
@@ -29,34 +44,11 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
         });
     }, [api]);
 
+    const screenWidth = Dimensions.get('screen').width;
+
     const renderItem = ({item}: any) => {
         console.log('got item', item);
-        return (
-            <>
-                <View style={styles.graphContainer}>
-                    <YAxis
-                        data={item.data}
-                        yAccessor={(d: any) => d.item.val}
-                        svg={{
-                            fill: 'grey',
-                            fontSize: 10,
-                        }}
-                    />
-                    <BarChart
-                        style={styles.graph}
-                        data={item.data}
-                        contentInset={{top: 30, bottom: 30}}
-                        curve={shape.curveNatural}
-                        yAccessor={(d: any) => d.item.val}
-                        svg={{fill: 'rgba(134, 65, 244, 0.8)'}}>
-                        <Grid />
-                    </BarChart>
-                </View>
-                <Text style={styles.graphTitle} accessibilityStates={{}}>
-                    {item.type}
-                </Text>
-            </>
-        );
+        return <DataCard item={item} />;
     };
 
     return (
@@ -65,11 +57,51 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                 <Carousel
                     data={data}
                     renderItem={renderItem}
-                    sliderWidth={Dimensions.get('screen').width}
-                    itemWidth={Dimensions.get('screen').width}
+                    sliderWidth={screenWidth}
+                    itemWidth={screenWidth}
                 />
             </View>
         </>
+    );
+};
+
+const DataCard = ({ item }: any) => {
+    const [width, setWidth] = useState(0);
+    return (
+        <Card
+            accessibilityStates={{}}
+            style={{margin: 20}}
+            onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
+            <Card.Title title={item.type} accessibilityStates={{}} />
+            <ProgressChart
+                accessor=""
+                paddingLeft="0"
+                backgroundColor=""
+                data={progressData}
+                width={width}
+                height={220}
+                strokeWidth={16}
+                radius={90}
+                chartConfig={chartConfig}
+                hideLegend={false}
+            />
+            <LineChart
+                data={{
+                    labels: item.data.map((d: any) =>
+                        moment(d.period).format('DD'),
+                    ),
+                    datasets: [
+                        {
+                            data: item.data.map((d: any) => d.val),
+                            color: () => 'rgba(131, 167, 234, 1)',
+                        },
+                    ],
+                }}
+                width={width}
+                height={220}
+                chartConfig={chartConfig}
+            />
+        </Card>
     );
 };
 
@@ -88,6 +120,8 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         fontSize: 20,
         fontWeight: '800',
+        paddingTop: 20,
+        paddingBottom: 20,
     },
 });
 
