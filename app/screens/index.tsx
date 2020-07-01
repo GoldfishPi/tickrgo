@@ -5,6 +5,7 @@ import LoginScreen from './auth/Login';
 import SignUpScreen from './auth/SignUp';
 import {useUser} from '../util';
 import AsyncStorage from '@react-native-community/async-storage';
+import LoadingScreen from './auth/Loading';
 
 interface ScreensProps {}
 
@@ -12,6 +13,7 @@ export type RootStackParamList = {
     Dashboard: {};
     Login: {};
     SignUp: {};
+    Loading: {};
 };
 
 const Stack = createStackNavigator<RootStackParamList>();
@@ -21,8 +23,6 @@ const Screens: FC<ScreensProps> = ({}) => {
         (async () => {
             const token = await AsyncStorage.getItem('token');
             const env = await AsyncStorage.getItem('env');
-            console.log('got token??', token);
-            console.log('got env??', env);
             if (token && env) {
                 dispatch({
                     type: 'SIGN_IN_TOKEN_REQUEST',
@@ -41,6 +41,11 @@ const Screens: FC<ScreensProps> = ({}) => {
         AsyncStorage.setItem('token', state.userMeta?.user?.token);
         AsyncStorage.setItem('env', 'spectrum');
     }, [state]);
+
+    if (state.loading) {
+        return <LoadingScreen />;
+    }
+
     return (
         <Stack.Navigator>
             {state.userMeta?.user ? (
