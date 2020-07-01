@@ -60,13 +60,20 @@ const Screens: FC<ScreensProps> = ({}) => {
                             <Appbar.Action
                                 accessibilityStates={{}}
                                 icon="menu"
-                                onPress={() => console.log('wowowoww')}
+                                onPress={() => {}}
                             />
                         )}
                         <Appbar.Content
                             accessibilityStates={{}}
                             title={scene.route.name}
                         />
+                        {!previous && (
+                            <Appbar.Action
+                                accessibilityStates={{}}
+                                icon="filter-variant"
+                                onPress={() => {}}
+                            />
+                        )}
                     </Appbar.Header>
                 ),
             }}>

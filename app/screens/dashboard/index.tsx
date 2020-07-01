@@ -52,7 +52,9 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                         <Grid />
                     </BarChart>
                 </View>
-                <Text style={styles.graphTitle} accessibilityStates={{  }}>{item.type}</Text>
+                <Text style={styles.graphTitle} accessibilityStates={{}}>
+                    {item.type}
+                </Text>
             </>
         );
     };
