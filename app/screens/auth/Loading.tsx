@@ -1,6 +1,5 @@
 import React, {FC} from 'react';
-import {ActivityIndicator, StyleSheet} from 'react-native';
-import {View, Text} from 'native-base';
+import {ActivityIndicator, StyleSheet, View, Text} from 'react-native';
 
 interface LoadingScreenProps {}
 

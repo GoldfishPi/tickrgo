@@ -1,7 +1,6 @@
 import React, {FC, useEffect, useState} from 'react';
-import {Dimensions, StyleSheet, Text} from 'react-native';
+import {Dimensions, StyleSheet, Text, View} from 'react-native';
 import {useApi} from '../../util/providers/ApiProvider';
-import {View} from 'native-base';
 import {BarChart, Grid, YAxis} from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
 import Carousel from 'react-native-snap-carousel';

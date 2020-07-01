@@ -1,11 +1,10 @@
 import React, {FC} from 'react';
-import {View} from 'react-native';
+import {View, Button, Text} from 'react-native';
 import {RootStackParamList} from '..';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useFormik} from 'formik';
 import {TextInput} from 'react-native-gesture-handler';
 import {useUser} from '../../util';
-import {Button, Text} from 'native-base';
 
 interface LoginScreenProps
     extends StackScreenProps<RootStackParamList, 'Login'> {}
@@ -51,7 +50,7 @@ const LoginScreen: FC<LoginScreenProps> = ({}) => {
                     value={values.password}
                     onChange={handleChange}
                 />
-                <Button onPress={handleSubmit}>
+                <Button onPress={handleSubmit} title="Login">
                     <Text>Login</Text>
                 </Button>
             </View>
