@@ -1,14 +1,17 @@
 import React, {FC} from 'react';
-import {ActivityIndicator, StyleSheet, View, Text} from 'react-native';
+import {ActivityIndicator, StyleSheet} from 'react-native';
+import {Surface, Text} from 'react-native-paper';
 
 interface LoadingScreenProps {}
 
 const LoadingScreen: FC<LoadingScreenProps> = () => {
     return (
-        <View style={styles.container}>
+        <Surface style={styles.container} accessibilityStates={{}}>
             <ActivityIndicator size="large" />
-            <Text style={styles.title}>Logging In</Text>
-        </View>
+            <Text style={styles.title} accessibilityStates={{}}>
+                Logging In
+            </Text>
+        </Surface>
     );
 };
 
