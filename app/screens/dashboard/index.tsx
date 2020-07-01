@@ -1,7 +1,7 @@
 import React, {FC, useEffect, useState} from 'react';
-import {Dimensions, StyleSheet} from 'react-native';
+import {Dimensions, StyleSheet, Text} from 'react-native';
 import {useApi} from '../../util/providers/ApiProvider';
-import {View, Text} from 'native-base';
+import {View} from 'native-base';
 import {BarChart, Grid, YAxis} from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
 import Carousel from 'react-native-snap-carousel';
@@ -33,9 +33,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
         console.log('got item', item);
         return (
             <>
-                <Text>{item.type}</Text>
-                <View
-                    style={styles.graphContainer}>
+                <View style={styles.graphContainer}>
                     <YAxis
                         data={item.data}
                         yAccessor={(d: any) => d.item.val}
@@ -54,6 +52,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                         <Grid />
                     </BarChart>
                 </View>
+                <Text style={styles.graphTitle}>{item.type}</Text>
             </>
         );
     };
@@ -74,15 +73,20 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
 
 const styles = StyleSheet.create({
     graphContainer: {
-
-                        padding: 20,
-                        flexDirection: 'row',
-                        minHeight: 200,
-                        minWidth: 200,
-                    },
+        padding: 20,
+        flexDirection: 'row',
+        minHeight: 200,
+        minWidth: 200,
+    },
     graph: {
-height: 200, flexGrow: 1
-    }
-})
+        height: 200,
+        flexGrow: 1,
+    },
+    graphTitle: {
+        textAlign: 'center',
+        fontSize: 20,
+        fontWeight: '800',
+    },
+});
 
 export default DashboardScreens;
