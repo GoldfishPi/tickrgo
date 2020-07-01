@@ -6,6 +6,9 @@ import SignUpScreen from './auth/SignUp';
 import {useUser} from '../util';
 import AsyncStorage from '@react-native-community/async-storage';
 import LoadingScreen from './auth/Loading';
+import {View} from 'react-native';
+import {Appbar, Avatar} from 'react-native-paper';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 interface ScreensProps {}
 
@@ -47,7 +50,26 @@ const Screens: FC<ScreensProps> = ({}) => {
     }
 
     return (
-        <Stack.Navigator>
+        <Stack.Navigator
+            screenOptions={{
+                header: ({previous, scene}) => (
+                    <Appbar.Header accessibilityStates={{}}>
+                        {previous ? (
+                            <Appbar.BackAction accessibilityStates={{}} />
+                        ) : (
+                            <Appbar.Action
+                                accessibilityStates={{}}
+                                icon="menu"
+                                onPress={() => console.log('wowowoww')}
+                            />
+                        )}
+                        <Appbar.Content
+                            accessibilityStates={{}}
+                            title={scene.route.name}
+                        />
+                    </Appbar.Header>
+                ),
+            }}>
             {state.userMeta?.user ? (
                 <Stack.Screen name="Dashboard" component={DashboardScreens} />
             ) : (

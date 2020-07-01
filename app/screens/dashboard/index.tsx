@@ -4,7 +4,7 @@ import {useApi} from '../../util/providers/ApiProvider';
 import {BarChart, Grid, YAxis} from 'react-native-svg-charts';
 import * as shape from 'd3-shape';
 import Carousel from 'react-native-snap-carousel';
-import { Text } from 'react-native-paper';
+import {Text} from 'react-native-paper';
 
 interface DashboardScreensProps {}
 
@@ -52,7 +52,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                         <Grid />
                     </BarChart>
                 </View>
-                <Text style={styles.graphTitle}>{item.type}</Text>
+                <Text style={styles.graphTitle} accessibilityStates={{  }}>{item.type}</Text>
             </>
         );
     };
