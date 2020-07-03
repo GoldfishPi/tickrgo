@@ -19,6 +19,7 @@ const chartConfig: any = {
     strokeWidth: 2, // optional, default 3
     barPercentage: 0.5,
     useShadowColorFromDataset: false, // optional
+    decimalPlaces:0,
 };
 // const progressData = {
 //     labels: [], // optional
