@@ -19,7 +19,7 @@ const chartConfig: any = {
     strokeWidth: 2, // optional, default 3
     barPercentage: 0.5,
     useShadowColorFromDataset: false, // optional
-    decimalPlaces:0,
+    decimalPlaces: 0,
 };
 // const progressData = {
 //     labels: [], // optional
@@ -107,25 +107,5 @@ const DataCard = ({item}: any) => {
         </Card>
     );
 };
-
-const styles = StyleSheet.create({
-    graphContainer: {
-        padding: 20,
-        flexDirection: 'row',
-        minHeight: 200,
-        minWidth: 200,
-    },
-    graph: {
-        height: 200,
-        flexGrow: 1,
-    },
-    graphTitle: {
-        textAlign: 'center',
-        fontSize: 20,
-        fontWeight: '800',
-        paddingTop: 20,
-        paddingBottom: 20,
-    },
-});
 
 export default DashboardScreens;
