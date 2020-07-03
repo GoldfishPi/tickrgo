@@ -25,7 +25,7 @@ const chartConfig: any = {
 // };
 
 const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
-    const {api} = useApi();
+    const api = useApi();
 
     const [data, setData] = useState<{period: number; val: number}[]>([]);
     useEffect(() => {
@@ -43,12 +43,12 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
         }).then((res: any) => {
             setData(res.data);
         });
-    }, [api]);
+    }, []);
 
     const screenWidth = Dimensions.get('screen').width;
 
     const renderItem = ({item}: any) => {
-        console.log('got item', item);
+        // console.log('got item', item);
         return <DataCard item={item} />;
     };
 

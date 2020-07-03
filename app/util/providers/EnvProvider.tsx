@@ -20,22 +20,26 @@ type Action =
       }
     | {
           type: 'SET_ENV_STAGE';
+      }
+    | {
+          type: 'SET_API_TOKEN';
+          payload: string | false;
       };
 
 interface State {
     env: EnvNames;
     apiUrl: string;
+    apiToken: string | false;
 }
 
-type Context = {
+interface Context extends State {
     dispatch: (action: Action) => void;
-    env: EnvNames;
-    apiUrl: string;
-};
+}
 
 const defaultState: State = {
     env: 'QA',
     apiUrl: QA_URL,
+    apiToken: false,
 };
 
 export const EnvContext = createContext<Context>({
@@ -66,17 +70,27 @@ export const EnvProvider: React.FC = ({children}) => {
                 };
             case 'SET_ENV_STAGE':
                 return {
+                    ...state,
                     env: 'STAGE',
                     apiUrl: STAGE_URL,
+                };
+            case 'SET_API_TOKEN':
+                console.log('setting token', action.payload);
+                return {
+                    ...state,
+                    apiToken: action.payload,
                 };
             default:
                 return state;
         }
     };
 
-    const [{env, apiUrl}, dispatch] = useReducer(reducer, defaultState);
+    const [{env, apiUrl, apiToken}, dispatch] = useReducer(
+        reducer,
+        defaultState,
+    );
     return (
-        <EnvContext.Provider value={{env, apiUrl, dispatch}}>
+        <EnvContext.Provider value={{env, apiUrl, apiToken, dispatch}}>
             {children}
         </EnvContext.Provider>
     );

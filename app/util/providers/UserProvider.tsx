@@ -2,6 +2,7 @@ import React, {useReducer, createContext, useCallback} from 'react';
 import sjcl from 'sjcl';
 import pcrypt from '../bs/pcrypt';
 import {useApi} from './ApiProvider';
+import {useEnv} from './EnvProvider';
 
 type Action =
     | {
@@ -50,7 +51,8 @@ const UserContext = createContext<Context>({
 });
 
 export const UserProvider: React.FC = ({children}) => {
-    const {api} = useApi();
+    const api = useApi();
+    const {dispatch: envDispatch} = useEnv();
 
     const reducer = (state: State, action: Action): State => {
         switch (action.type) {
@@ -106,7 +108,9 @@ export const UserProvider: React.FC = ({children}) => {
 
     const signInAction = useCallback(
         async (env: string, username: string, password: string) => {
+            console.log('fetching salt');
             const saltRes = await api.get(`users/${username}/salt`);
+            console.log('fetched salt');
             let salt_str: string = saltRes.data;
 
             var split = salt_str.split(':');
@@ -125,10 +129,18 @@ export const UserProvider: React.FC = ({children}) => {
             api.defaults.headers.common.Authorization = auth;
 
             try {
+                console.log('got here');
                 const login = await api.post(`/users/auth/full?domain=${env}`);
                 api.defaults.headers.common.Authorization = pcrypt.gen_auth(
                     login.data.user.token,
                 );
+
+                envDispatch({
+                    type: 'SET_API_TOKEN',
+                    payload: pcrypt.gen_auth(login.data.user.token),
+                });
+
+                console.log('passed two step auto');
 
                 dispatch({
                     type: 'SIGN_IN_SUCCESS',
@@ -140,7 +152,7 @@ export const UserProvider: React.FC = ({children}) => {
                 });
             }
         },
-        [api],
+        [api, envDispatch],
     );
 
     const signInTokenAction = useCallback(
@@ -155,13 +167,21 @@ export const UserProvider: React.FC = ({children}) => {
                     type: 'SIGN_IN_TOKEN_SUCCESS',
                     payload: login.data,
                 });
+                envDispatch({
+                    type: 'SET_API_TOKEN',
+                    payload: pcrypt.gen_auth(login.data.user.token),
+                });
             } catch (e) {
                 dispatch({
                     type: 'SIGN_IN_TOKEN_FAILURE',
                 });
+                envDispatch({
+                    type: 'SET_API_TOKEN',
+                    payload: false,
+                });
             }
         },
-        [api],
+        [api, envDispatch],
     );
 
     const [state, dispatch] = useReducer(reducer, defaultState);

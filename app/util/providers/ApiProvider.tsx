@@ -1,28 +1,36 @@
-import React from 'react';
-import {createContext, useContext} from 'react';
-import axios, {AxiosInstance} from 'axios';
+import axios from 'axios';
 import {useEnv} from './EnvProvider';
 
-interface ApiState {
-    api: AxiosInstance;
-}
+// interface ApiState {
+//     api: AxiosInstance;
+// }
 
-export const ApiContext = createContext<ApiState>({
-    api: axios,
-});
+// export const ApiContext = createContext<ApiState>({
+//     api: axios,
+// });
 
-export const ApiProvider: React.FC = ({children}) => {
-    const {apiUrl} = useEnv();
+// export const ApiProvider: React.FC = ({children}) => {
+//     const {apiUrl} = useEnv();
 
-    const api = axios.create({baseURL: apiUrl});
+//     const state = {
+//         api,
+//     };
 
-    const state = {
-        api,
-    };
+//     return <ApiContext.Provider value={state}>{children}</ApiContext.Provider>;
+// };
 
-    return <ApiContext.Provider value={state}>{children}</ApiContext.Provider>;
+export const useApi = () => {
+    const {apiUrl, apiToken} = useEnv();
+    console.log('got stuff??', apiToken);
+    const api = axios.create({
+        baseURL: apiUrl,
+        headers: {
+            // Authorization: apiToken,
+            common: {
+                Authorization: apiToken,
+            },
+        },
+    });
+
+    return api;
 };
-
-export const useApi = () => ({
-    ...useContext(ApiContext),
-});

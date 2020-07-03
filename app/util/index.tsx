@@ -8,11 +8,9 @@ const TickrProviders: React.FC = ({children}) => {
     return (
         <>
             <EnvProvider>
-                <ApiProvider>
-                    <UserProvider>
-                        <ThemeProvider>{children}</ThemeProvider>
-                    </UserProvider>
-                </ApiProvider>
+                <UserProvider>
+                    <ThemeProvider>{children}</ThemeProvider>
+                </UserProvider>
             </EnvProvider>
         </>
     );
