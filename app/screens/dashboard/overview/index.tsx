@@ -3,9 +3,10 @@ import moment from 'moment';
 import React, {FC, useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, View} from 'react-native';
 import {LineChart, ProgressChart} from 'react-native-chart-kit';
-import {Card} from 'react-native-paper';
+import {Card, Text} from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
 import {useTheme} from 'app/util/providers/ThemeProvider';
+import {useTranslation} from 'react-i18next';
 
 interface DashboardScreensProps {}
 
@@ -26,6 +27,7 @@ const chartConfig: any = {
 
 const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     const api = useApi();
+    const {t} = useTranslation();
 
     const [data, setData] = useState<{period: number; val: number}[]>([]);
     useEffect(() => {
@@ -69,12 +71,13 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
 const DataCard = ({item}: any) => {
     const [width, setWidth] = useState(0);
     const {theme} = useTheme();
+    const {t} = useTranslation();
     return (
         <Card
             accessibilityStates={{}}
             style={{margin: 20}}
             onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
-            <Card.Title title={item.type} accessibilityStates={{}} />
+            <Card.Title title={t(item.type)} accessibilityStates={{}} />
             <LineChart
                 data={{
                     labels: item.data.map((d: any) =>

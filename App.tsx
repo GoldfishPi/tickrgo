@@ -7,6 +7,7 @@ import {
     Provider as PaperProvider,
     DarkTheme as PaperDarkTheme,
 } from 'react-native-paper';
+import 'app/util/i18n';
 declare const global: {HermesInternal: null | {}};
 
 const App = () => {
