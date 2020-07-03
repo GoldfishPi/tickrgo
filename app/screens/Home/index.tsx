@@ -13,7 +13,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     return (
         <Tab.Navigator>
             <Tab.Screen
-                name="Overview"
+                name="Home"
                 component={Overview}
                 options={{
                     tabBarIcon: () => (

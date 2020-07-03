@@ -6,12 +6,12 @@ import {useUser} from '../util';
 import LoadingScreen from './auth/Loading';
 import LoginScreen from './auth/Login';
 import SignUpScreen from './auth/SignUp';
-import DashboardScreens from './dashboard';
+import HomeScreens from './Home';
 
 interface ScreensProps {}
 
 export type RootStackParamList = {
-    Dashboard: {};
+    Home: {};
     Login: {};
     SignUp: {};
     Loading: {};
@@ -76,7 +76,7 @@ const Screens: FC<ScreensProps> = ({}) => {
                 ),
             }}>
             {state.userMeta?.user ? (
-                <Stack.Screen name="Dashboard" component={DashboardScreens} />
+                <Stack.Screen name="Home" component={HomeScreens} />
             ) : (
                 <>
                     <Stack.Screen name="Login" component={LoginScreen} />

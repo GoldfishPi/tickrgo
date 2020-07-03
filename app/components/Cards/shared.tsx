@@ -12,7 +12,7 @@ const baseCardStyles = StyleSheet.create({
     },
     subtitle: {
         fontSize: 18,
-        fontWeight:'bold'
+        fontWeight: 'bold',
     },
 });
 
