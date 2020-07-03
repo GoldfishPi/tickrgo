@@ -75,7 +75,6 @@ export const EnvProvider: React.FC = ({children}) => {
                     apiUrl: STAGE_URL,
                 };
             case 'SET_API_TOKEN':
-                console.log('setting token', action.payload);
                 return {
                     ...state,
                     apiToken: action.payload,
