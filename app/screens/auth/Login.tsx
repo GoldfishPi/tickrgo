@@ -4,7 +4,7 @@ import {RootStackParamList} from '..';
 import {StackScreenProps} from '@react-navigation/stack';
 import {useFormik} from 'formik';
 import {TextInput} from 'react-native-gesture-handler';
-import {useUser} from '../../util';
+import {useUser} from 'app/util';
 
 interface LoginScreenProps
     extends StackScreenProps<RootStackParamList, 'Login'> {}
