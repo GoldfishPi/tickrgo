@@ -3,10 +3,11 @@ import {createStackNavigator} from '@react-navigation/stack';
 import React, {FC, useEffect} from 'react';
 import {Appbar} from 'react-native-paper';
 import {useUser} from '../util';
-import LoadingScreen from './Auth/Loading';
 import LoginScreen from './Auth/Login';
 import SignUpScreen from './Auth/SignUp';
 import HomeScreens from './Home';
+import LoadingSpinner from 'app/components/LoadingSpinner';
+import {useTranslation} from 'react-i18next';
 
 interface ScreensProps {}
 
@@ -20,6 +21,7 @@ export type RootStackParamList = {
 const Stack = createStackNavigator<RootStackParamList>();
 const Screens: FC<ScreensProps> = ({}) => {
     const {dispatch, state} = useUser();
+    const {t} = useTranslation();
     useEffect(() => {
         (async () => {
             const token = await AsyncStorage.getItem('token');
@@ -44,7 +46,7 @@ const Screens: FC<ScreensProps> = ({}) => {
     }, [state]);
 
     if (state.loading) {
-        return <LoadingScreen />;
+        return <LoadingSpinner text={t('Loggin In')} />;
     }
 
     return (

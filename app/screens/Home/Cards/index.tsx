@@ -3,15 +3,19 @@ import RedditCard from 'app/components/Cards/Reddit';
 import TweetCard from 'app/components/Cards/Tweet';
 import {useApi} from 'app/util';
 import React, {FC, useEffect, useState} from 'react';
-import {Dimensions, ScrollView, View} from 'react-native';
+import {Dimensions, ScrollView, View, ActivityIndicator} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
+import LoadingScreen from 'app/screens/Auth/Loading';
+import LoadingSpinner from 'app/components/LoadingSpinner';
 
 interface CardsScreenProps {}
 
 const CardsScreen: FC<CardsScreenProps> = ({}) => {
     const api = useApi();
     const [data, setData] = useState<any[]>([]);
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
+        setLoading(true);
         api.post('/bi/cards', {
             filters: {
                 dates: 'now-7d/d',
@@ -19,7 +23,10 @@ const CardsScreen: FC<CardsScreenProps> = ({}) => {
             options: {
                 types: ['newsroom', 'tweets', 'reddit'],
             },
-        }).then((res) => setData(res.data));
+        }).then((res) => {
+            setLoading(false);
+            setData(res.data);
+        });
     }, []);
 
     const screenWidth = Dimensions.get('screen').width;
@@ -42,6 +49,10 @@ const CardsScreen: FC<CardsScreenProps> = ({}) => {
             </ScrollView>
         );
     };
+
+    if (loading) {
+        return <LoadingSpinner />;
+    }
     return (
         <View>
             <Carousel

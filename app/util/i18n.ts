@@ -8,6 +8,7 @@ i18n.use(initReactI18next).init({
                 newsVolume: 'News Volume',
                 redditVolume: 'Reddit Volume',
                 twitterVolume: 'Twitter Volume',
+                loading: 'Loading',
             },
         },
     },
