@@ -1,12 +1,10 @@
-import React, {FC, useEffect, useState} from 'react';
-import {View, Dimensions, ScrollView} from 'react-native';
-import {Text, Card} from 'react-native-paper';
-import {useApi} from 'app/util';
-import Carousel from 'react-native-snap-carousel';
-import {useTheme} from 'app/util/providers/ThemeProvider';
-import TweetCard from 'app/components/Cards/Tweet';
-import RedditCard from 'app/components/Cards/Reddit';
 import NewsCard from 'app/components/Cards/News';
+import RedditCard from 'app/components/Cards/Reddit';
+import TweetCard from 'app/components/Cards/Tweet';
+import {useApi} from 'app/util';
+import React, {FC, useEffect, useState} from 'react';
+import {Dimensions, ScrollView, View} from 'react-native';
+import Carousel from 'react-native-snap-carousel';
 
 interface CardsScreenProps {}
 
@@ -38,7 +36,7 @@ const CardsScreen: FC<CardsScreenProps> = ({}) => {
                         <RedditCard key={card.id} card={card} />
                     ))}
                 {item.type === 'news' &&
-                    item.data.map((cluster:any) => (
+                    item.data.map((cluster: any) => (
                         <NewsCard key={cluster.clusterId} cluster={cluster} />
                     ))}
             </ScrollView>
