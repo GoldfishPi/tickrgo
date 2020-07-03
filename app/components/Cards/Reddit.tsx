@@ -1,7 +1,8 @@
 import React, {FC} from 'react';
-import {Card, Text, Avatar} from 'react-native-paper';
+import {Card, Text, Avatar, Button} from 'react-native-paper';
 import {Image} from 'react-native';
 import {useTheme} from 'app/util';
+import {baseCardStyles} from './shared';
 
 interface RedditCardProps {
     card: any;
@@ -10,7 +11,7 @@ interface RedditCardProps {
 const RedditCard: FC<RedditCardProps> = ({card}) => {
     const {theme} = useTheme();
     return (
-        <Card>
+        <Card style={baseCardStyles.card}>
             <Card.Title
                 title={card.account.username}
                 right={() => (
@@ -23,8 +24,11 @@ const RedditCard: FC<RedditCardProps> = ({card}) => {
                 )}
             />
             <Card.Content>
-                <Text>{card.message}</Text>
+                <Text>{card.message.slice(0, 150)}</Text>
             </Card.Content>
+            <Card.Actions>
+                <Button color={theme.reddit}>More</Button>
+            </Card.Actions>
         </Card>
     );
 };

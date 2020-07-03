@@ -18,7 +18,7 @@ const CardsScreen: FC<CardsScreenProps> = ({}) => {
                 dates: 'now-7d/d',
             },
             options: {
-                types: ['tweets', 'reddit', 'instagram'],
+                types: ['tweets', 'reddit'],
             },
         }).then((res) => setData(res.data));
     }, []);
@@ -27,21 +27,16 @@ const CardsScreen: FC<CardsScreenProps> = ({}) => {
 
     const renderItem = ({item}: any) => {
         return (
-            <Card accessibilityStates={{}}>
-                <Card.Title title={item.type} accessibilityStates={{}} />
-                <Card.Content>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                        {item.type === 'tweets' &&
-                            item.data.map((card: any) => (
-                                <TweetCard key={card.id} card={card} />
-                            ))}
-                        {item.type === 'reddit' &&
-                            item.data.map((card: any) => (
-                                <RedditCard key={card.id} card={card} />
-                            ))}
-                    </ScrollView>
-                </Card.Content>
-            </Card>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                {item.type === 'tweets' &&
+                    item.data.map((card: any) => (
+                        <TweetCard key={card.id} card={card} />
+                    ))}
+                {item.type === 'reddit' &&
+                    item.data.map((card: any) => (
+                        <RedditCard key={card.id} card={card} />
+                    ))}
+            </ScrollView>
         );
     };
     return (
