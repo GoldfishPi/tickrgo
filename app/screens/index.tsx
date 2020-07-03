@@ -3,9 +3,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 import React, {FC, useEffect} from 'react';
 import {Appbar} from 'react-native-paper';
 import {useUser} from '../util';
-import LoadingScreen from './auth/Loading';
-import LoginScreen from './auth/Login';
-import SignUpScreen from './auth/SignUp';
+import LoadingScreen from './Auth/Loading';
+import LoginScreen from './Auth/Login';
+import SignUpScreen from './Auth/SignUp';
 import HomeScreens from './Home';
 
 interface ScreensProps {}
