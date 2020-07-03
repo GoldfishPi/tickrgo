@@ -36,9 +36,7 @@ const Screens: FC<ScreensProps> = ({}) => {
         })();
     }, [dispatch]);
     useEffect(() => {
-        if (!state.userMeta) {
-            return;
-        }
+        if (!state.userMeta?.user?.token) return;
         AsyncStorage.setItem('token', state.userMeta?.user?.token);
         AsyncStorage.setItem('env', 'spectrum');
     }, [state]);
