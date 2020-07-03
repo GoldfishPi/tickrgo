@@ -27,8 +27,6 @@ const chartConfig: any = {
 
 const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     const api = useApi();
-    const {t} = useTranslation();
-
     const [data, setData] = useState<{period: number; val: number}[]>([]);
     useEffect(() => {
         api.post('/bi/trends', {
