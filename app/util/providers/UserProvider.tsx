@@ -163,13 +163,13 @@ export const UserProvider: React.FC = ({children}) => {
                 const login = await api.post(
                     `/users/auth/full?token=1&domain=${env}`,
                 );
-                dispatch({
-                    type: 'SIGN_IN_TOKEN_SUCCESS',
-                    payload: login.data,
-                });
                 envDispatch({
                     type: 'SET_API_TOKEN',
                     payload: pcrypt.gen_auth(login.data.user.token),
+                });
+                dispatch({
+                    type: 'SIGN_IN_TOKEN_SUCCESS',
+                    payload: login.data,
                 });
             } catch (e) {
                 dispatch({
