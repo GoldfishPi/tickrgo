@@ -5,6 +5,7 @@ import {Dimensions, StyleSheet, View} from 'react-native';
 import {LineChart, ProgressChart} from 'react-native-chart-kit';
 import {Card} from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
+import {useTheme} from 'app/util/providers/ThemeProvider';
 
 interface DashboardScreensProps {}
 
@@ -13,15 +14,15 @@ const chartConfig: any = {
     backgroundGradientFromOpacity: 0,
     backgroundGradientTo: '#08130D',
     backgroundGradientToOpacity: 0.5,
-    color: (opacity = 1) => `rgba(131, 167, 234, ${opacity})`,
+    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
     strokeWidth: 2, // optional, default 3
     barPercentage: 0.5,
     useShadowColorFromDataset: false, // optional
 };
-const progressData = {
-    labels: [], // optional
-    data: [0.6],
-};
+// const progressData = {
+//     labels: [], // optional
+//     data: [0.6],
+// };
 
 const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     const {api} = useApi();
@@ -39,7 +40,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                     {type: 'redditVolume'},
                 ],
             },
-        }).then((res) => {
+        }).then((res: any) => {
             setData(res.data);
         });
     }, [api]);
@@ -67,24 +68,13 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
 
 const DataCard = ({item}: any) => {
     const [width, setWidth] = useState(0);
+    const {theme} = useTheme();
     return (
         <Card
             accessibilityStates={{}}
             style={{margin: 20}}
             onLayout={(e) => setWidth(e.nativeEvent.layout.width)}>
             <Card.Title title={item.type} accessibilityStates={{}} />
-            <ProgressChart
-                accessor=""
-                paddingLeft="0"
-                backgroundColor=""
-                data={progressData}
-                width={width}
-                height={220}
-                strokeWidth={16}
-                radius={90}
-                chartConfig={chartConfig}
-                hideLegend={false}
-            />
             <LineChart
                 data={{
                     labels: item.data.map((d: any) =>
@@ -93,7 +83,18 @@ const DataCard = ({item}: any) => {
                     datasets: [
                         {
                             data: item.data.map((d: any) => d.val),
-                            color: () => 'rgba(131, 167, 234, 1)',
+                            color: () => {
+                                switch (item.type) {
+                                    case 'newsVolume':
+                                        return theme.news;
+                                    case 'redditVolume':
+                                        return theme.reddit;
+                                    case 'twitterVolume':
+                                        return theme.twitter;
+                                    default:
+                                        return theme.twitter;
+                                }
+                            },
                         },
                     ],
                 }}
