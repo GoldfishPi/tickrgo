@@ -1,10 +1,9 @@
-import React, {FC} from 'react';
-import {View} from 'react-native';
-import {Text, IconButton} from 'react-native-paper';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Overview from './overview';
+import React, {FC} from 'react';
+import {IconButton} from 'react-native-paper';
 import CardsScreen from './cards';
 import FlowScreen from './flow';
+import Overview from './overview';
 
 interface DashboardScreensProps {}
 
@@ -36,10 +35,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                 component={FlowScreen}
                 options={{
                     tabBarIcon: () => (
-                        <IconButton
-                            icon="water"
-                            accessibilityStates={{}}
-                        />
+                        <IconButton icon="water" accessibilityStates={{}} />
                     ),
                 }}
             />
