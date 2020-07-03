@@ -1,9 +1,9 @@
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import React, {FC} from 'react';
 import {IconButton} from 'react-native-paper';
-import CardsScreen from './cards';
-import FlowScreen from './flow';
-import Overview from './overview';
+import CardsScreen from './Cards';
+import FlowScreen from './Flow';
+import Overview from './Overview';
 
 interface DashboardScreensProps {}
 

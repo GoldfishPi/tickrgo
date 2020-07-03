@@ -38,7 +38,7 @@ const CardsScreen: FC<CardsScreenProps> = ({}) => {
                         <RedditCard key={card.id} card={card} />
                     ))}
                 {item.type === 'news' &&
-                    item.data.map((cluster) => (
+                    item.data.map((cluster:any) => (
                         <NewsCard key={cluster.clusterId} cluster={cluster} />
                     ))}
             </ScrollView>
