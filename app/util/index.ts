@@ -8,6 +8,7 @@ import {useBiTrend} from './providers/lib-bi/TrendProvider';
 import {useSearches} from './providers/filters/SearchesProvider';
 import {useSocialTopics} from './providers/filters/SocialTopicsProvider';
 import {useFilters} from './providers/filters/FiltersProvider';
+import {useTheme} from './providers/ThemeProvider';
 
 export {
     TickrProviders,
@@ -19,6 +20,7 @@ export {
     useSearches,
     useSocialTopics,
     useFilters,
+    useTheme,
 };
 
 export {useBiTrend};
