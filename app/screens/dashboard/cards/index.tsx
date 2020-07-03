@@ -6,6 +6,7 @@ import Carousel from 'react-native-snap-carousel';
 import {useTheme} from 'app/util/providers/ThemeProvider';
 import TweetCard from 'app/components/Cards/Tweet';
 import RedditCard from 'app/components/Cards/Reddit';
+import NewsCard from 'app/components/Cards/News';
 
 interface CardsScreenProps {}
 
@@ -18,7 +19,7 @@ const CardsScreen: FC<CardsScreenProps> = ({}) => {
                 dates: 'now-7d/d',
             },
             options: {
-                types: ['tweets', 'reddit'],
+                types: ['newsroom', 'tweets', 'reddit'],
             },
         }).then((res) => setData(res.data));
     }, []);
@@ -35,6 +36,10 @@ const CardsScreen: FC<CardsScreenProps> = ({}) => {
                 {item.type === 'reddit' &&
                     item.data.map((card: any) => (
                         <RedditCard key={card.id} card={card} />
+                    ))}
+                {item.type === 'news' &&
+                    item.data.map((cluster) => (
+                        <NewsCard key={cluster.clusterId} cluster={cluster} />
                     ))}
             </ScrollView>
         );
