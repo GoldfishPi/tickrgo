@@ -36,7 +36,7 @@ const NewsCard: FC<NewsCardProps> = ({cluster}) => {
                 <Text>{card.body}</Text>
             </Card.Content>
             <Card.Actions>
-                <Button color={theme.news}>More</Button>
+                <Button color={theme.news} icon="information-variant">{card.metrics.impact}</Button>
             </Card.Actions>
         </Card>
     );
