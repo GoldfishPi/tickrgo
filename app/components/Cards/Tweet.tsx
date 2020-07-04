@@ -41,6 +41,9 @@ const TweetCard: FC<TweetCardProps> = ({card, onMore}) => {
                 <Text accessibilityStates={{}}>{card.text}</Text>
             </Card.Content>
             <Card.Actions>
+                <Button color={theme.twitter} icon="information-variant">
+                    {card.metrics.impact}
+                </Button>
                 <Button icon="heart" color={theme.twitter}>
                     {card.metrics.favorites}
                 </Button>
