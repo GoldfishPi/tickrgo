@@ -89,7 +89,11 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                         )}
                         <Appbar.Content
                             accessibilityStates={{}}
-                            title={scene.descriptor.options.title ? scene.descriptor.options.title : scene.route.name}
+                            title={
+                                scene.descriptor.options.title
+                                    ? scene.descriptor.options.title
+                                    : scene.route.name
+                            }
                         />
                         {!previous && (
                             <Appbar.Action
