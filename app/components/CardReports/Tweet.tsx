@@ -66,8 +66,8 @@ const TweetCardReport: FC<TweetCardReportProps> = ({card}) => {
                     onLayout={({nativeEvent}) => {
                         setHeight(nativeEvent.layout.height);
                     }}>
-                    <Card.Content>
-                        <ScrollView style={{maxHeight: height}}>
+                    <ScrollView style={{maxHeight: height}}>
+                        <Card.Content>
                             <Text style={styles.body}>{card.text}</Text>
                             <View
                                 onLayout={({nativeEvent}) =>
@@ -104,8 +104,8 @@ const TweetCardReport: FC<TweetCardReportProps> = ({card}) => {
                                     chartConfig={chartConfig}
                                 />
                             </View>
-                        </ScrollView>
-                    </Card.Content>
+                        </Card.Content>
+                    </ScrollView>
                 </View>
                 <Card.Actions>
                     <Button color={theme.twitter} icon="heart">
