@@ -10,6 +10,7 @@ interface RedditCardProps {
 
 const RedditCard: FC<RedditCardProps> = ({card}) => {
     const {theme} = useTheme();
+    console.log('reddit card', card.metrics);
     return (
         <Card style={baseCardStyles.card}>
             <Card.Title
@@ -27,7 +28,12 @@ const RedditCard: FC<RedditCardProps> = ({card}) => {
                 <Text>{card.message.slice(0, 150)}</Text>
             </Card.Content>
             <Card.Actions>
-                <Button color={theme.reddit}>More</Button>
+                <Button color={theme.reddit} icon="information-variant">
+                    {card.metrics.impact}
+                </Button>
+                <Button color={theme.reddit} icon="arrow-up-bold">
+                    {card.metrics.upvotes}
+                </Button>
             </Card.Actions>
         </Card>
     );
