@@ -12,7 +12,10 @@ interface TweetCardProps {
 const TweetCard: FC<TweetCardProps> = ({card, onMore}) => {
     const {theme} = useTheme();
     return (
-        <Card accessibilityStates={{}} style={baseCardStyles.card}>
+        <Card
+            accessibilityStates={{}}
+            style={baseCardStyles.card}
+            onPress={onMore}>
             <Card.Title
                 accessibilityStates={{}}
                 title={card.account.name}
@@ -38,11 +41,11 @@ const TweetCard: FC<TweetCardProps> = ({card, onMore}) => {
                 <Text accessibilityStates={{}}>{card.text}</Text>
             </Card.Content>
             <Card.Actions>
-                <Button
-                    color={theme.twitter}
-                    accessibilityStates={{}}
-                    onPress={onMore}>
-                    More
+                <Button icon="heart" color={theme.twitter}>
+                    {card.metrics.favorites}
+                </Button>
+                <Button icon="twitter-retweet" color={theme.twitter}>
+                    {card.metrics.retweets}
                 </Button>
             </Card.Actions>
         </Card>
