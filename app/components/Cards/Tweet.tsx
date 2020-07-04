@@ -6,9 +6,10 @@ import {baseCardStyles} from './shared';
 
 interface TweetCardProps {
     card: any;
+    onMore?: () => void;
 }
 
-const TweetCard: FC<TweetCardProps> = ({card}) => {
+const TweetCard: FC<TweetCardProps> = ({card, onMore}) => {
     const {theme} = useTheme();
     return (
         <Card accessibilityStates={{}} style={baseCardStyles.card}>
@@ -37,7 +38,10 @@ const TweetCard: FC<TweetCardProps> = ({card}) => {
                 <Text accessibilityStates={{}}>{card.text}</Text>
             </Card.Content>
             <Card.Actions>
-                <Button color={theme.twitter} accessibilityStates={{}}>
+                <Button
+                    color={theme.twitter}
+                    accessibilityStates={{}}
+                    onPress={onMore}>
                     More
                 </Button>
             </Card.Actions>

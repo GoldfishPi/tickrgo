@@ -3,14 +3,15 @@ import RedditCard from 'app/components/Cards/Reddit';
 import TweetCard from 'app/components/Cards/Tweet';
 import {useApi} from 'app/util';
 import React, {FC, useEffect, useState} from 'react';
-import {Dimensions, ScrollView, View, ActivityIndicator} from 'react-native';
+import {Dimensions, ScrollView, View} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import LoadingScreen from 'app/screens/Auth/Loading';
 import LoadingSpinner from 'app/components/LoadingSpinner';
+import {StackScreenProps} from '@react-navigation/stack';
+import {HomeTabParamList} from '..';
 
-interface CardsScreenProps {}
-
-const CardsScreen: FC<CardsScreenProps> = ({}) => {
+interface CardsScreenProps
+    extends StackScreenProps<HomeTabParamList, 'Cards'> {}
+const CardsScreen: FC<CardsScreenProps> = ({navigation}) => {
     const api = useApi();
     const [data, setData] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -36,7 +37,16 @@ const CardsScreen: FC<CardsScreenProps> = ({}) => {
             <ScrollView showsVerticalScrollIndicator={false}>
                 {item.type === 'tweets' &&
                     item.data.map((card: any) => (
-                        <TweetCard key={card.id} card={card} />
+                        <TweetCard
+                            key={card.id}
+                            card={card}
+                            onMore={() =>
+                                navigation.navigate('CardReport', {
+                                    card,
+                                    type: item.type,
+                                })
+                            }
+                        />
                     ))}
                 {item.type === 'reddit' &&
                     item.data.map((card: any) => (

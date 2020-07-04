@@ -1,12 +1,12 @@
 import {useApi} from 'app/util';
+import {useTheme} from 'app/util/providers/ThemeProvider';
 import moment from 'moment';
 import React, {FC, useEffect, useState} from 'react';
-import {Dimensions, StyleSheet, View} from 'react-native';
-import {LineChart, ProgressChart} from 'react-native-chart-kit';
-import {Card, Text} from 'react-native-paper';
-import Carousel from 'react-native-snap-carousel';
-import {useTheme} from 'app/util/providers/ThemeProvider';
 import {useTranslation} from 'react-i18next';
+import {Dimensions, View} from 'react-native';
+import {LineChart} from 'react-native-chart-kit';
+import {Card} from 'react-native-paper';
+import Carousel from 'react-native-snap-carousel';
 
 interface DashboardScreensProps {}
 

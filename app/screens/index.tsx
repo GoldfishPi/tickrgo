@@ -1,7 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {createStackNavigator} from '@react-navigation/stack';
 import React, {FC, useEffect} from 'react';
-import {Appbar} from 'react-native-paper';
 import {useUser} from '../util';
 import LoginScreen from './Auth/Login';
 import SignUpScreen from './Auth/SignUp';
@@ -50,33 +49,7 @@ const Screens: FC<ScreensProps> = ({}) => {
     }
 
     return (
-        <Stack.Navigator
-            screenOptions={{
-                header: ({previous, scene}) => (
-                    <Appbar.Header accessibilityStates={{}}>
-                        {previous ? (
-                            <Appbar.BackAction accessibilityStates={{}} />
-                        ) : (
-                            <Appbar.Action
-                                accessibilityStates={{}}
-                                icon="menu"
-                                onPress={() => {}}
-                            />
-                        )}
-                        <Appbar.Content
-                            accessibilityStates={{}}
-                            title={scene.route.name}
-                        />
-                        {!previous && (
-                            <Appbar.Action
-                                accessibilityStates={{}}
-                                icon="filter-variant"
-                                onPress={() => {}}
-                            />
-                        )}
-                    </Appbar.Header>
-                ),
-            }}>
+        <Stack.Navigator headerMode="none">
             {state.userMeta?.user ? (
                 <Stack.Screen name="Home" component={HomeScreens} />
             ) : (
