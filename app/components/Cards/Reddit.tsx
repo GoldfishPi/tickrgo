@@ -10,7 +10,6 @@ interface RedditCardProps {
 
 const RedditCard: FC<RedditCardProps> = ({card}) => {
     const {theme} = useTheme();
-    console.log('reddit card', card.metrics);
     return (
         <Card style={baseCardStyles.card}>
             <Card.Title
