@@ -7,6 +7,7 @@ import Overview from './Overview';
 import {createStackNavigator} from '@react-navigation/stack';
 import CardReport from './CardReport';
 import {useTranslation} from 'react-i18next';
+import {View} from 'react-native';
 
 interface DashboardScreensProps {}
 
@@ -32,7 +33,7 @@ const Stack = createStackNavigator<HomeStackParamList>();
 
 const DashboardTabs = () => {
     return (
-        <Tab.Navigator>
+        <Tab.Navigator tabBar={() => <View />}>
             <Tab.Screen
                 name="Overview"
                 component={Overview}
