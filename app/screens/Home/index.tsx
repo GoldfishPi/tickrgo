@@ -1,13 +1,9 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import React, {FC} from 'react';
-import {IconButton, Appbar} from 'react-native-paper';
-import CardsScreen from './Cards';
-import FlowScreen from './Flow';
-import Overview from './Overview';
 import {createStackNavigator} from '@react-navigation/stack';
-import CardReport from './CardReport';
+import React, {FC} from 'react';
 import {useTranslation} from 'react-i18next';
-import {View} from 'react-native';
+import {Appbar} from 'react-native-paper';
+import CardReport from './CardReport';
+import Overview from './Overview';
 
 interface DashboardScreensProps {}
 
@@ -28,47 +24,8 @@ export type HomeStackParamList = {
     CardReport: HomeTabParamList['CardReport'];
 };
 
-const Tab = createBottomTabNavigator<HomeTabParamList>();
 const Stack = createStackNavigator<HomeStackParamList>();
 
-const DashboardTabs = () => {
-    return (
-        <Tab.Navigator tabBar={() => <View />}>
-            <Tab.Screen
-                name="Overview"
-                component={Overview}
-                options={{
-                    tabBarIcon: () => (
-                        <IconButton icon="home" accessibilityStates={{}} />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Cards"
-                component={CardsScreen}
-                initialParams={{
-                    onViewReport: () => {
-                        console.log('viewing report lol');
-                    },
-                }}
-                options={{
-                    tabBarIcon: () => (
-                        <IconButton icon="cards" accessibilityStates={{}} />
-                    ),
-                }}
-            />
-            <Tab.Screen
-                name="Flow"
-                component={FlowScreen}
-                options={{
-                    tabBarIcon: () => (
-                        <IconButton icon="water" accessibilityStates={{}} />
-                    ),
-                }}
-            />
-        </Tab.Navigator>
-    );
-};
 const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     const {t} = useTranslation();
     return (
@@ -106,7 +63,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                     </Appbar.Header>
                 ),
             }}>
-            <Stack.Screen name="Home" component={DashboardTabs} />
+            <Stack.Screen name="Home" component={Overview} />
             <Stack.Screen
                 name="CardReport"
                 options={{title: t('Card Report')}}
