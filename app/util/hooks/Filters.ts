@@ -39,6 +39,7 @@ export type Action =
       }
     | {
           type: 'FETCH_AVAILABLE_FILTERS_REQUEST';
+          payload: string[];
       }
     | {
           type: 'FETCH_AVAILABLE_FILTERS_SUCCESS';
@@ -97,25 +98,16 @@ const initializer: State = {
 const useFilters = () => {
     const reducer = (state: State, action: Action): State => {
         switch (action.type) {
-            case 'SET_ENABLED_FILTERS':
-                return {
-                    ...state,
-                    enabledFilters: action.payload,
-                };
             case 'SET_ACTIVE_FILTERS':
                 return {
                     ...state,
                     activeFilters: action.payload,
                 };
-            case 'SET_AVAILABLE_FILTERS':
-                return {
-                    ...state,
-                    availableFilters: action.payload,
-                };
             case 'FETCH_AVAILABLE_FILTERS_REQUEST':
                 fetchAvailableFilters();
                 return {
                     ...state,
+                    enabledFilters: action.payload,
                     loading: true,
                 };
             case 'FETCH_AVAILABLE_FILTERS_FAILURE':
