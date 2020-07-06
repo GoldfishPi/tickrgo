@@ -10,9 +10,9 @@ type AvailableFilter = {
     type: FilterType;
     values: FilterValues;
 };
-type AvailableFilters = AvailableFilter[];
+export type AvailableFilters = AvailableFilter[];
 
-type ActiveFilters = {
+export type ActiveFilters = {
     [key: string]: string;
 };
 
@@ -24,7 +24,7 @@ type FilterDefs = {
     };
 };
 
-type Action =
+export type Action =
     | {
           type: 'SET_ACTIVE_FILTERS';
           payload: ActiveFilters;
