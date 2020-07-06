@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import {createStackNavigator} from '@react-navigation/stack';
 import React, {FC, useEffect} from 'react';
-import {useUser} from '../util';
+import {useUser, useGlobalFilters} from '../util';
 import LoginScreen from './Auth/Login';
 import SignUpScreen from './Auth/SignUp';
 import HomeScreens from './Home';
@@ -21,6 +21,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 const Screens: FC<ScreensProps> = ({}) => {
     const {dispatch, state} = useUser();
     const {t} = useTranslation();
+    const {dispatch: dispatchFilters} = useGlobalFilters();
     useEffect(() => {
         (async () => {
             const token = await AsyncStorage.getItem('token');
@@ -42,6 +43,10 @@ const Screens: FC<ScreensProps> = ({}) => {
         }
         AsyncStorage.setItem('token', state.userMeta?.user?.token);
         AsyncStorage.setItem('env', 'spectrum');
+        dispatchFilters({
+            type: 'FETCH_AVAILABLE_FILTERS_REQUEST',
+            payload: ['dates'],
+        });
     }, [state]);
 
     if (state.loading) {
