@@ -2,7 +2,10 @@ import React from 'react';
 import {useEnv, EnvProvider} from './providers/EnvProvider';
 import {useTheme, ThemeProvider} from './providers/ThemeProvider';
 import {useUser, UserProvider} from './providers/UserProvider';
-import { GlobalFiltersProvider, useGlobalFilters } from './providers/GlobalFilters';
+import {
+    GlobalFiltersProvider,
+    useGlobalFilters,
+} from './providers/GlobalFilters';
 
 const TickrProviders: React.FC = ({children}) => {
     return (
