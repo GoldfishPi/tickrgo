@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {useEnv} from './EnvProvider';
+import {useEnv} from 'app/util';
 
 export const useApi = () => {
     const {apiUrl, apiToken} = useEnv();
