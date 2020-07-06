@@ -18,3 +18,4 @@ const TickrProviders: React.FC = ({children}) => {
 export {TickrProviders, useEnv, useUser, useTheme};
 
 export {useApi} from './hooks/Api';
+export {useFilters} from './hooks/Filters';
