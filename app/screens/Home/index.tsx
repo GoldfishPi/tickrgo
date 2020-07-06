@@ -1,11 +1,11 @@
 import {createStackNavigator} from '@react-navigation/stack';
+import FilterDialog from 'app/components/FilterDialog';
 import React, {FC, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Appbar, Dialog, Text} from 'react-native-paper';
+import {View} from 'react-native';
+import {Appbar} from 'react-native-paper';
 import CardReport from './CardReport';
 import Overview from './Overview';
-import {View} from 'react-native';
-import FilterDialog from 'app/components/FilterDialog';
 
 interface DashboardScreensProps {}
 
@@ -80,7 +80,8 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
             </Stack.Navigator>
             <FilterDialog
                 visible={filtersDialogActive}
-                onDismiss={() => setFiltersDialogActive(false)}/>
+                onDismiss={() => setFiltersDialogActive(false)}
+            />
         </View>
     );
 };
