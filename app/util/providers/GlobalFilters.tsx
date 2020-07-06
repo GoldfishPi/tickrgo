@@ -1,28 +1,19 @@
 import React, {FC, createContext, useContext} from 'react';
-import {
-    ActiveFilters,
-    AvailableFilters,
-    Action,
-    useFilters,
-} from '../hooks/Filters';
+import {State, Action, useFilters, defaultState} from '../hooks/Filters';
 
-interface GlobalFiltersState {
-    activeFilters: ActiveFilters;
-    availableFilters: AvailableFilters;
+interface GlobalFiltersState extends State {
     dispatch: (action: Action) => void;
 }
 
 const GlobalFiltersContext = createContext<GlobalFiltersState>({
+    ...defaultState,
     dispatch: () => {},
-    availableFilters: [],
-    activeFilters: {},
 });
 
 export const GlobalFiltersProvider: FC = ({children}) => {
-    const {activeFilters, availableFilters, dispatch} = useFilters();
+    const state = useFilters();
     return (
-        <GlobalFiltersContext.Provider
-            value={{activeFilters, availableFilters, dispatch}}>
+        <GlobalFiltersContext.Provider value={state}>
             {children}
         </GlobalFiltersContext.Provider>
     );

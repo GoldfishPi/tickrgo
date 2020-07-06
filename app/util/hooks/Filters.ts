@@ -52,7 +52,7 @@ export type Action =
           type: 'FETCH_AVAILABLE_FILTERS_FAILURE';
       };
 
-type State = {
+export type State = {
     loading: boolean;
     activeFilters: ActiveFilters;
     availableFilters: AvailableFilter[];
@@ -88,7 +88,7 @@ const filterDefs: FilterDefs = {
     },
 };
 
-const initializer: State = {
+const defaultState: State = {
     loading: false,
     activeFilters: {},
     availableFilters: [],
@@ -156,9 +156,9 @@ const useFilters = () => {
     const [
         {enabledFilters, availableFilters, activeFilters, loading},
         dispatch,
-    ] = useReducer(reducer, initializer);
+    ] = useReducer(reducer, defaultState);
 
     return {enabledFilters, availableFilters, activeFilters, loading, dispatch};
 };
 
-export {useFilters};
+export {useFilters, defaultState};
