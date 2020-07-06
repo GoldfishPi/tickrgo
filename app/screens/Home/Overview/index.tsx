@@ -1,17 +1,17 @@
-import {useApi} from 'app/util';
+import {useNavigation} from '@react-navigation/native';
+import NewsCard from 'app/components/Cards/News';
+import RedditCard from 'app/components/Cards/Reddit';
+import TweetCard from 'app/components/Cards/Tweet';
+import LoadingSpinner from 'app/components/LoadingSpinner';
+import {useApi, useGlobalFilters} from 'app/util';
 import {useTheme} from 'app/util/providers/ThemeProvider';
 import moment from 'moment';
 import React, {FC, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {Dimensions, View, ScrollView} from 'react-native';
+import {Dimensions, ScrollView, View} from 'react-native';
 import {LineChart} from 'react-native-chart-kit';
-import {Card, Text} from 'react-native-paper';
+import {Card} from 'react-native-paper';
 import Carousel from 'react-native-snap-carousel';
-import LoadingSpinner from 'app/components/LoadingSpinner';
-import TweetCard from 'app/components/Cards/Tweet';
-import NewsCard from 'app/components/Cards/News';
-import RedditCard from 'app/components/Cards/Reddit';
-import {useNavigation} from '@react-navigation/native';
 
 interface DashboardScreensProps {}
 
@@ -36,6 +36,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     const [data, setData] = useState<{period: number; val: number}[]>([]);
     const [cards, setCards] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
+    const {loading: loadingFilters} = useGlobalFilters();
     const filters: any = {
         dates: 'now-7d/d',
     };
@@ -80,7 +81,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
         // return <View>{cards[index] && <Text>Hai i have cards lol</Text>}</View>;
     };
 
-    if (loading) {
+    if (loading || loadingFilters) {
         return <LoadingSpinner />;
     }
 
