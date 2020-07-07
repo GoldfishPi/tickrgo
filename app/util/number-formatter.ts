@@ -1,4 +1,4 @@
-export function numberFormatter(number: number, options: any) {
+export function numberFormatter(number: number, options?: any) {
     options || (options = {});
     var places = typeof options.places === 'undefined' ? 1 : options.places;
     var neg_paren = options.negative_paren || false;

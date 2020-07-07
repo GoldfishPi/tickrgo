@@ -33,7 +33,7 @@ const GoalCard: FC<GoalCardProps> = ({color, title, trend}) => {
     const averageDaily =
         trend.map((t) => t.val).reduce((acc, curr) => acc + curr) /
         trend.length;
-    const complete =  averageDaily / goal;
+    const complete = averageDaily / goal;
     return (
         <View>
             <Card accessibilityStates={{}} style={styles.card}>
@@ -104,6 +104,8 @@ const GoalCard: FC<GoalCardProps> = ({color, title, trend}) => {
                         setDialogVisible(false);
                         setGoal(value);
                     }}
+                    min={averageDaily}
+                    max={averageDaily * 4}
                 />
             </Portal>
         </View>

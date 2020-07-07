@@ -25,3 +25,4 @@ export {TickrProviders, useEnv, useUser, useTheme, useGlobalFilters};
 
 export {useApi} from './hooks/Api';
 export {useFilters} from './hooks/Filters';
+export {numberFormatter} from './number-formatter';

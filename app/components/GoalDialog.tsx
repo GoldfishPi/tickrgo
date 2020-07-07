@@ -2,7 +2,7 @@ import React, {FC, useState} from 'react';
 import {Dialog, Button} from 'react-native-paper';
 import {Slider} from 'react-native';
 import {useTranslation} from 'react-i18next';
-import {useTheme} from 'app/util';
+import {useTheme, numberFormatter} from 'app/util';
 
 interface GoalDialogProps {
     visible: boolean;
@@ -10,6 +10,7 @@ interface GoalDialogProps {
     onSave?: (value: number) => void;
     value?: number;
     max?: number;
+    min?: number;
 }
 
 const GoalDialog: FC<GoalDialogProps> = ({
@@ -17,7 +18,8 @@ const GoalDialog: FC<GoalDialogProps> = ({
     onDismiss,
     onSave,
     value = 0,
-    max
+    max,
+    min,
 }) => {
     const {t} = useTranslation();
     const {theme} = useTheme();
@@ -25,14 +27,15 @@ const GoalDialog: FC<GoalDialogProps> = ({
     return (
         <Dialog visible={visible} onDismiss={onDismiss}>
             <Dialog.Title accessibilityStates={{}}>
-                {t('Goal')}: {newValue} Avg. daily mentions
+                {t('Goal')}: {numberFormatter(newValue)} Avg. daily mentions
             </Dialog.Title>
             <Dialog.Content>
                 <Slider
                     onValueChange={(val) =>
-                        setNewValue(Math.round(val * 10000))
+                        setNewValue(val)
                     }
                     maximumValue={max}
+                    minimumValue={min}
                     value={value}
                 />
             </Dialog.Content>
