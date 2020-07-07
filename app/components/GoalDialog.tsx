@@ -31,9 +31,7 @@ const GoalDialog: FC<GoalDialogProps> = ({
             </Dialog.Title>
             <Dialog.Content>
                 <Slider
-                    onValueChange={(val) =>
-                        setNewValue(val)
-                    }
+                    onValueChange={(val) => setNewValue(val)}
                     maximumValue={max}
                     minimumValue={min}
                     value={value}
