@@ -9,6 +9,8 @@ interface ThemeState {
     googleAnalytics: string;
     adwords: string;
     linkedin: string;
+
+    primary: string;
 }
 
 const defatulState: ThemeState = {
@@ -20,6 +22,7 @@ const defatulState: ThemeState = {
     googleAnalytics: '#F07F0C',
     adwords: '#189B5B',
     linkedin: '#2566B1',
+    primary: '#2F90FF',
 };
 
 type Context = {
