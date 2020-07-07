@@ -1,7 +1,7 @@
 import React, {useReducer, createContext, useCallback} from 'react';
 import sjcl from 'sjcl';
 import pcrypt from '../bs/pcrypt';
-import {useApi} from './ApiProvider';
+import {useApi} from 'app/util';
 import {useEnv} from './EnvProvider';
 
 type Action =

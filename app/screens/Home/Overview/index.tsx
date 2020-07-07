@@ -81,7 +81,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
         // return <View>{cards[index] && <Text>Hai i have cards lol</Text>}</View>;
     };
 
-    if (loading || loadingFilters) {
+    if (loading) {
         return <LoadingSpinner />;
     }
 
