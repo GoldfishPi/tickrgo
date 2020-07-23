@@ -1,6 +1,6 @@
 import React, {FC} from 'react';
 import {Text, Dialog, RadioButton} from 'react-native-paper';
-import {View} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
 interface FilterDialogProps {
     visible: boolean;
@@ -12,25 +12,28 @@ const FilterDialog: FC<FilterDialogProps> = ({visible, onDismiss}) => {
         <Dialog visible={visible} onDismiss={onDismiss}>
             <Dialog.Content>
                 <RadioButton.Group onValueChange={() => {}} value="second">
-                    <View style={{flex: 1}}>
-                        <View
-                            style={{
-                                flexGrow: 1,
-                                minWidth: 20,
-                                minHeight: 20,
-                            }}>
-                            <RadioButton
-                                style={{flexGrow: 1, width: 20}}
-                                value="first"
-                                accessibilityStates={{}}
-                            />
+                    <View>
+                        <View style={styles.form}>
+                            <RadioButton value="first" />
                         </View>
-                        <Text>LOL</Text>
+                        <Text accessibilityStates={{}}>LOL</Text>
                     </View>
                 </RadioButton.Group>
             </Dialog.Content>
         </Dialog>
     );
 };
+
+const styles = StyleSheet.create({
+    form: {
+        flexGrow: 1,
+        minWidth: 20,
+        minHeight: 20,
+    },
+    radioButton: {
+        flexGrow: 1,
+        width: 20,
+    },
+});
 
 export default FilterDialog;
