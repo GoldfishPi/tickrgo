@@ -21,7 +21,10 @@ const Stack = createStackNavigator<RootStackParamList>();
 const Screens: FC<ScreensProps> = ({}) => {
     const {dispatch, state} = useUser();
     const {t} = useTranslation();
-    const {dispatch: dispatchFilters} = useGlobalFilters();
+    const {
+        dispatch: dispatchFilters,
+        loading: filtersLoading,
+    } = useGlobalFilters();
     useEffect(() => {
         (async () => {
             const token = await AsyncStorage.getItem('token');
@@ -49,7 +52,7 @@ const Screens: FC<ScreensProps> = ({}) => {
         });
     }, [state]);
 
-    if (state.loading) {
+    if (state.loading && filtersLoading) {
         return <LoadingSpinner text={t('Loggin In')} />;
     }
 
