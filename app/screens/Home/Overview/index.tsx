@@ -4,7 +4,7 @@ import RedditCard from 'app/components/Cards/Reddit';
 import TweetCard from 'app/components/Cards/Tweet';
 import GoalCard from 'app/components/GoalCard';
 import LoadingSpinner from 'app/components/LoadingSpinner';
-import {useApi} from 'app/util';
+import {useApi, useGlobalFilters} from 'app/util';
 import {useTheme} from 'app/util/providers/ThemeProvider';
 import React, {FC, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -23,9 +23,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     const [data, setData] = useState<{period: number; val: number}[]>([]);
     const [cards, setCards] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const filters: any = {
-        dates: 'now-7d/d',
-    };
+    const {activeFilters: filters} = useGlobalFilters();
     useEffect(() => {
         setLoading(true);
         Promise.all([
@@ -58,7 +56,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                 setLoading(false);
             })
             .catch((e) => console.error(e));
-    }, []);
+    }, [filters]);
 
     const screenWidth = Dimensions.get('screen').width;
 
