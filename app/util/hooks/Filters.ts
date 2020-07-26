@@ -4,6 +4,7 @@ type FilterType = 'checkbox' | 'radio';
 type FilterValues = Array<{
     val: string;
     label: string;
+    default?: boolean;
 }>;
 type AvailableFilter = {
     name: string;
@@ -70,6 +71,7 @@ const filterDefs: FilterDefs = {
             {
                 label: '7 Days',
                 val: 'now-7d/d',
+                default: true,
             },
             {
                 label: '14 Days',
@@ -104,7 +106,7 @@ const useFilters = () => {
                     activeFilters: action.payload,
                 };
             case 'FETCH_AVAILABLE_FILTERS_REQUEST':
-                fetchAvailableFilters();
+                fetchAvailableFilters(action.payload);
                 return {
                     ...state,
                     enabledFilters: action.payload,
@@ -127,9 +129,10 @@ const useFilters = () => {
         }
     };
 
-    const fetchAvailableFilters = async () => {
+    const fetchAvailableFilters = async (enabledFilters: string[]) => {
         let newAvailableFilters: AvailableFilters = [];
-        for (let name in enabledFilters) {
+        let newActiveFilters: ActiveFilters = {};
+        for (let name of enabledFilters) {
             const def = filterDefs[name];
             const values = def ? await def.values() : [];
             newAvailableFilters = [
@@ -143,11 +146,30 @@ const useFilters = () => {
         }
 
         // -- TODO: resolve default filters
+        for (let name of enabledFilters) {
+            if (!activeFilters[name]) {
+                const availableFilter = newAvailableFilters.find(
+                    (n) => n.name === name,
+                );
+                const defaultValues = !availableFilter
+                    ? ''
+                    : availableFilter.values
+                          .filter((v) => v.default)
+                          .map((v) => v.val)
+                          .toString();
+                newActiveFilters = {
+                    ...newActiveFilters,
+                    [name]: defaultValues,
+                };
+            } else {
+                newActiveFilters[name] = activeFilters[name];
+            }
+        }
 
         dispatch({
             type: 'FETCH_AVAILABLE_FILTERS_SUCCESS',
             payload: {
-                activeFilters,
+                activeFilters: newActiveFilters,
                 availableFilters: newAvailableFilters,
             },
         });
