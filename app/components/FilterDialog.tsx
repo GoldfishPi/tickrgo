@@ -1,6 +1,7 @@
 import React, {FC} from 'react';
 import {Text, Dialog, RadioButton} from 'react-native-paper';
 import {View, StyleSheet} from 'react-native';
+import Checkbox from '@react-native-community/checkbox';
 
 interface FilterDialogProps {
     visible: boolean;
@@ -14,7 +15,7 @@ const FilterDialog: FC<FilterDialogProps> = ({visible, onDismiss}) => {
                 <RadioButton.Group onValueChange={() => {}} value="second">
                     <View>
                         <View style={styles.form}>
-                            <RadioButton value="first" />
+                            <Checkbox />
                         </View>
                         <Text accessibilityStates={{}}>LOL</Text>
                     </View>
