@@ -145,7 +145,7 @@ const useFilters = () => {
             ];
         }
 
-        // -- TODO: resolve default filters
+        // -- If filter doesn't exist on activeFilters apply the default values
         for (let name of enabledFilters) {
             if (!activeFilters[name]) {
                 const availableFilter = newAvailableFilters.find(
@@ -164,6 +164,20 @@ const useFilters = () => {
             } else {
                 newActiveFilters[name] = activeFilters[name];
             }
+        }
+
+        // -- Check if each activeFilters value exists on availableFilters
+        for (let key in newActiveFilters) {
+            const filter = availableFilters.find((f) => f.name === key);
+            if (!filter) {
+                continue;
+            }
+            const availableValues = filter.values.map((v) => v.val);
+            const values = newActiveFilters[key]
+                .split(',')
+                .filter((v) => availableValues.find((a) => a === v))
+                .toString();
+            newActiveFilters[key] = values;
         }
 
         dispatch({
