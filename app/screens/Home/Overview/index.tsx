@@ -26,6 +26,9 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     const {activeFilters: filters} = useGlobalFilters();
     useEffect(() => {
         setLoading(true);
+        if (!filters) {
+            return;
+        }
         Promise.all([
             api.post('/bi/trends', {
                 filters,
