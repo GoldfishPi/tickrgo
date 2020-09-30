@@ -1,4 +1,4 @@
-import {RequestOptions, SearchFilters, ParsedObject} from 'lib-bi';
+import {RequestOptions, SearchFilters, ParsedObject, ParsedData} from 'lib-bi';
 import {useApi} from './Api';
 import {Trend} from 'lib-bi/dist/models/trends/types';
 import {useState} from 'react';
@@ -16,7 +16,7 @@ const makeRequest = async <t>(
     body: Request,
 ) => {
     const isObj = body.options.obj !== undefined ? body.options.obj : true;
-    const {data} = await api.post<ParsedObject<t>>(`/bi/${route}`, {
+    const {data} = await api.post<t>(`/bi/${route}`, {
         ...body,
         options: {
             ...body.options,
@@ -25,10 +25,10 @@ const makeRequest = async <t>(
     });
     return data;
 };
-const useBi = <t>(body: Request, route: string) => {
+const useBi = <t>(body: Request, route: string, defaultData: any = {}) => {
     const api = useApi();
 
-    const [data, setData] = useState<ParsedObject<t>>({});
+    const [data, setData] = useState<t>(defaultData);
 
     useDeepCompareEffect(() => {
         makeRequest<t>(route, api, body).then((d) => setData(d));
@@ -38,10 +38,14 @@ const useBi = <t>(body: Request, route: string) => {
 };
 
 const useTrends = (body: Request) => {
-    return useBi<Trend>(body, 'trends');
+    return useBi<ParsedObject<Trend>>(body, 'trends');
 };
 
 const useCards = (filters: SearchFilters, types: string[]) =>
-    useBi<any>({filters, options: {obj: true, types}} as any, 'cards');
+    useBi<ParsedData[]>(
+        {filters, options: {obj: false, types}} as any,
+        'cards',
+        [],
+    );
 
 export {useTrends, useCards};
