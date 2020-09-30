@@ -10,6 +10,8 @@ import React, {FC, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions, ScrollView, View} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
+import {useTrends, useCards} from 'app/util/hooks/libBi';
+import {ParsedObject, Trend} from 'lib-bi';
 
 interface DashboardScreensProps {}
 
@@ -18,28 +20,38 @@ interface DashboardScreensProps {}
 //     data: [0.6],
 // };
 
-const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
+const DashboardScreens: FC<DashboardScreensProps> = _ => {
     const api = useApi();
-    const [data, setData] = useState<{period: number; val: number}[]>([]);
+    const [data, setData] = useState<ParsedObject<Trend>>({});
     const [cards, setCards] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const {activeFilters: filters} = useGlobalFilters();
+
+    const fetchTrends = useTrends({
+        filters,
+        options: {
+            mixins: [
+                {type: 'newsVolume'},
+                {type: 'twitterVolume'},
+                {type: 'redditVolume'},
+            ]
+        }
+    });
+
+    const fetchCards = useCards({
+        filters,
+        options: {
+            types: ['tweets', 'reddit', 'newsroom'],
+        },
+    });
+
     useEffect(() => {
         setLoading(true);
         if (!filters) {
             return;
         }
         Promise.all([
-            api.post('/bi/trends', {
-                filters,
-                options: {
-                    mixins: [
-                        {type: 'newsVolume'},
-                        {type: 'twitterVolume'},
-                        {type: 'redditVolume'},
-                    ],
-                },
-            }),
+            fetchTrends(),
             api.post('/bi/cards', {
                 filters,
                 options: {
@@ -47,10 +59,13 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
                 },
             }),
         ])
-            .then(([trends, {data: newCards}]: any[]) => {
+            .then(([trends, { data:newCards }]) => {
                 // console.log('new cards', newCards.data.tweets.primary);
                 console.log('finished fetch');
-                setData(trends.data);
+                setData(trends);
+
+                console.log('got cards', cards);
+
                 setCards([
                     newCards.find(({type}: any) => type === 'news'),
                     newCards.find(({type}: any) => type === 'tweets'),
@@ -64,7 +79,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
     const screenWidth = Dimensions.get('screen').width;
 
     const renderItem = ({item, index}: any) => {
-        return <DataCard item={item} cards={cards[index]} />;
+        return <DataCard item={{ key:item,data:data[item] }} cards={cards[index]} />;
         // return <View>{cards[index] && <Text>Hai i have cards lol</Text>}</View>;
     };
 
@@ -76,7 +91,7 @@ const DashboardScreens: FC<DashboardScreensProps> = ({}) => {
         <>
             <View>
                 <Carousel
-                    data={data}
+                    data={Object.keys(data)}
                     renderItem={renderItem}
                     sliderWidth={screenWidth}
                     itemWidth={screenWidth}
@@ -92,7 +107,7 @@ const DataCard = ({item, cards}: any) => {
     const {navigate} = useNavigation();
     const [color, setColor] = useState('');
     useEffect(() => {
-        switch (item.type) {
+        switch (item.key) {
             case 'newsVolume':
                 setColor(theme.news);
                 break;
@@ -107,9 +122,10 @@ const DataCard = ({item, cards}: any) => {
                 break;
         }
     }, []);
+    console.log('cards', cards);
     return (
         <ScrollView>
-            <GoalCard color={color} title={t(item.type)} trend={item.data} />
+            <GoalCard color={color} title={t(item.key)} trend={item.data.primary} />
             {cards &&
                 cards.type === 'tweets' &&
                 cards.data.map((card: any) => (
