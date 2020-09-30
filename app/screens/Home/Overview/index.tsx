@@ -9,12 +9,11 @@ import React, {FC, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions, ScrollView, View} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import {useTrends} from 'app/util/hooks/libBi';
+import {useTrends, useCards} from 'app/util/hooks/libBi';
 
 interface DashboardScreensProps {}
 
 const DashboardScreens: FC<DashboardScreensProps> = _ => {
-    const cards:any = {};
     const {activeFilters: filters} = useGlobalFilters();
 
 
@@ -30,11 +29,13 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
 
     });
 
+    const cards = useCards(filters, ['newsroom']);
+
 
     const screenWidth = Dimensions.get('screen').width;
 
-    const renderItem = ({item, index}: any) => {
-        return <DataCard item={{ key:item,data:trends[item] }} cards={cards[index]} />;
+    const renderItem = ({item}: any) => {
+        return <DataCard item={{ key:item,data:trends[item] }} cards={cards} />;
     };
 
     return (
@@ -90,8 +91,9 @@ const DataCard = ({item, cards}: any) => {
                     />
                 ))}
     {cards &&
-            cards.type === 'news' &&
-            cards.data.map((card: any) => (
+            item.key === 'newsVolume' &&
+            cards?.news?.primary && 
+            cards.news.primary.map((card: any) => (
                 <NewsCard cluster={card} key={card.clusterId} />
             ))}
     {cards &&
