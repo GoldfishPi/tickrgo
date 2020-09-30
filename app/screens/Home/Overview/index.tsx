@@ -3,8 +3,7 @@ import NewsCard from 'app/components/Cards/News';
 import RedditCard from 'app/components/Cards/Reddit';
 import TweetCard from 'app/components/Cards/Tweet';
 import GoalCard from 'app/components/GoalCard';
-import LoadingSpinner from 'app/components/LoadingSpinner';
-import {useApi, useGlobalFilters} from 'app/util';
+import {useGlobalFilters} from 'app/util';
 import {useTheme} from 'app/util/providers/ThemeProvider';
 import React, {FC, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
@@ -20,9 +19,8 @@ interface DashboardScreensProps {}
 // };
 
 const DashboardScreens: FC<DashboardScreensProps> = _ => {
-    const api = useApi();
-    const [cards, setCards] = useState<any[]>([]);
-    const {activeFilters: filters, loading:filtersLoading} = useGlobalFilters();
+    const cards:any = {};
+    const {activeFilters: filters} = useGlobalFilters();
 
     // if(filtersLoading)return(<></>);
 
