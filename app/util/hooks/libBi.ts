@@ -2,6 +2,7 @@ import {RequestOptions, SearchFilters, ParsedObject} from 'lib-bi';
 import {useApi} from './Api';
 import {Trend} from 'lib-bi/dist/models/trends/types';
 import {useState} from 'react';
+import useDeepCompareEffect from 'use-deep-compare-effect';
 
 interface Request {
     options: RequestOptions;
@@ -11,7 +12,7 @@ interface Request {
 const useBi = <t>(
     body: Request,
     route: string,
-): [ParsedObject<t>, () => Promise<void>] => {
+) => {
     const api = useApi();
     const isObj = body.options.obj !== undefined ? body.options.obj : true;
 
@@ -28,7 +29,11 @@ const useBi = <t>(
         setFetchedData(data);
     };
 
-    return [fetchedData, fetch];
+    useDeepCompareEffect(() => {
+        fetch();
+    }, [body]);
+
+    return fetchedData;
 };
 
 const useTrends = (body: Request) => {
