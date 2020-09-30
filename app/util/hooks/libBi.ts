@@ -37,26 +37,7 @@ const useTrends = (body: Request) => {
     return useBi<Trend>(body, 'trends');
 };
 
-const useCards = (
-    filters: SearchFilters,
-    types: string[],
-): [ParsedObject<any>, () => Promise<void>] => {
-    const api = useApi();
-    const [fetchedData, setFetchedData] = useState<ParsedObject<any>>({});
-
-    const fetch = async () => {
-        const {data} = await api.post('/bi/cards', {
-            filters,
-            options: {
-                obj: true,
-                types,
-            },
-        });
-
-        setFetchedData(data);
-    };
-
-    return [fetchedData, fetch];
-};
+const useCards = (filters: SearchFilters, types: string[]) =>
+    useBi<any>({ filters, options: { obj:true, types } } as any, 'cards');
 
 export {useTrends, useCards};
