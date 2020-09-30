@@ -1,7 +1,7 @@
 import {RequestOptions, SearchFilters, ParsedObject} from 'lib-bi';
 import {useApi} from './Api';
 import {Trend} from 'lib-bi/dist/models/trends/types';
-import {useState} from 'react';
+import {useState, useEffect, useMemo} from 'react';
 
 interface Request {
     options: RequestOptions;
@@ -31,8 +31,12 @@ const useBi = <t>(
     return [fetchedData, fetch];
 };
 
-const useTrends = (body: Request) => {
-    return useBi<Trend>(body, 'trends');
+const useTrends = (filters: SearchFilters, body: RequestOptions) => {
+    useEffect(() => {
+        console.log('this will be where i fetch', filters);
+    }, [filters, body]);
+    // return useBi<Trend>(body, 'trends');
+    return [{}, () => new Promise(() => {})];
 };
 
 const useCards = (

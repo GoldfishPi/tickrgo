@@ -44,15 +44,17 @@ const Screens: FC<ScreensProps> = ({}) => {
         if (!state.userMeta?.user?.token) {
             return;
         }
+        console.log('dispatching');
         AsyncStorage.setItem('token', state.userMeta?.user?.token);
         AsyncStorage.setItem('env', 'spectrum');
         dispatchFilters({
             type: 'FETCH_AVAILABLE_FILTERS_REQUEST',
             payload: ['dates'],
         });
-    }, [state]);
+    }, [state.userMeta?.user?.token]);
 
-    if (state.loading && filtersLoading) {
+
+    if (state.loading || filtersLoading) {
         return <LoadingSpinner text={t('Loggin In')} />;
     }
 

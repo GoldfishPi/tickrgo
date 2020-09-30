@@ -90,7 +90,7 @@ const filterDefs: FilterDefs = {
 };
 
 const defaultState: State = {
-    loading: false,
+    loading: true,
     activeFilters: {
         dates: 'now-7d/d',
     },
@@ -168,6 +168,7 @@ const useFilters = () => {
                     activeFilters: action.payload,
                 };
             case 'FETCH_AVAILABLE_FILTERS_REQUEST':
+                console.log('fetching availableFilters');
                 fetchAvailableFilters(
                     action.payload,
                     activeFilters,
@@ -193,6 +194,7 @@ const useFilters = () => {
                     loading: true,
                 };
             case 'FETCH_AVAILABLE_FILTERS_SUCCESS':
+                console.log('fetch success');
                 return {
                     ...state,
                     availableFilters: action.payload.availableFilters,

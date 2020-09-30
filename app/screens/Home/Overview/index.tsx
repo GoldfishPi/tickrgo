@@ -23,44 +23,30 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
     const api = useApi();
     const [cards, setCards] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-    const {activeFilters: filters} = useGlobalFilters();
+    const {activeFilters: filters, loading:filtersLoading} = useGlobalFilters();
 
-    const [trends, fetchTrends] = useTrends({
-        filters,
-        options: {
-            mixins: [
-                {type: 'newsVolume'},
-                {type: 'twitterVolume'},
-                {type: 'redditVolume'},
-            ]
-        }
+    // if(filtersLoading)return(<></>);
+
+    const [trends, fetchTrends] = useTrends(filters,{
+        mixins: [
+            {type: 'newsVolume'},
+            {type: 'twitterVolume'},
+            {type: 'redditVolume'},
+        ]
     });
 
 
-    useEffect(() => {
-        setLoading(true);
-        if (!filters) {
-            return;
-        }
-        Promise.all([
-            api.post('/bi/cards', {
-                filters,
-                options: {
-                    types: ['tweets', 'reddit', 'newsroom'],
-                },
-            }),
-            fetchTrends(),
-        ])
-            .then(([{ data:newCards }]) => {
-                setCards([
-                    newCards.find(({type}: any) => type === 'news'),
-                    newCards.find(({type}: any) => type === 'tweets'),
-                    newCards.find(({type}: any) => type === 'reddit'),
-                ]);
-                setLoading(false);
-            })
-            .catch((e) => console.error(e));
-    }, [filters]);
+    // useEffect(() => {
+    //     setLoading(true);
+    //     if (!filters) {
+    //         return;
+    //     }
+    //     Promise.all([
+    //         fetchTrends(),
+    //     ])
+    //         .then(() => setLoading(false))
+    //         .catch((e) => console.error(e));
+    // }, [filters]);
 
     const screenWidth = Dimensions.get('screen').width;
 
