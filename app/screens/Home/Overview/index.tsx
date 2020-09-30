@@ -10,8 +10,7 @@ import React, {FC, useEffect, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {Dimensions, ScrollView, View} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
-import {useTrends, useCards} from 'app/util/hooks/libBi';
-import {ParsedObject, Trend} from 'lib-bi';
+import {useTrends} from 'app/util/hooks/libBi';
 
 interface DashboardScreensProps {}
 
@@ -22,7 +21,7 @@ interface DashboardScreensProps {}
 
 const DashboardScreens: FC<DashboardScreensProps> = _ => {
     const api = useApi();
-    // const [cards, setCards] = useState<any[]>([]);
+    const [cards, setCards] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const {activeFilters: filters} = useGlobalFilters();
 
@@ -37,12 +36,6 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
         }
     });
 
-    const fetchCards = useCards({
-        filters,
-        options: {
-            types: ['tweets', 'reddit', 'newsroom'],
-        },
-    });
 
     useEffect(() => {
         setLoading(true);
@@ -50,21 +43,15 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
             return;
         }
         Promise.all([
-            fetchTrends(),
             api.post('/bi/cards', {
                 filters,
                 options: {
                     types: ['tweets', 'reddit', 'newsroom'],
                 },
             }),
+            fetchTrends(),
         ])
-            .then(([trends, { data:newCards }]) => {
-                // console.log('new cards', newCards.data.tweets.primary);
-                console.log('finished fetch');
-                setData(trends);
-
-                console.log('got cards', cards);
-
+            .then(([{ data:newCards }]) => {
                 setCards([
                     newCards.find(({type}: any) => type === 'news'),
                     newCards.find(({type}: any) => type === 'tweets'),
@@ -78,7 +65,7 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
     const screenWidth = Dimensions.get('screen').width;
 
     const renderItem = ({item, index}: any) => {
-        return <DataCard item={{ key:item,data:data[item] }} cards={cards[index]} />;
+        return <DataCard item={{ key:item,data:trends[item] }} cards={cards[index]} />;
         // return <View>{cards[index] && <Text>Hai i have cards lol</Text>}</View>;
     };
 
@@ -90,7 +77,7 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
         <>
             <View>
                 <Carousel
-                    data={Object.keys(data)}
+                    data={Object.keys(trends)}
                     renderItem={renderItem}
                     sliderWidth={screenWidth}
                     itemWidth={screenWidth}
@@ -121,7 +108,6 @@ const DataCard = ({item, cards}: any) => {
                 break;
         }
     }, []);
-    console.log('cards', cards);
     return (
         <ScrollView>
             <GoalCard color={color} title={t(item.key)} trend={item.data.primary} />
