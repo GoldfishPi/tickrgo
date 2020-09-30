@@ -9,10 +9,7 @@ interface Request {
     filters: SearchFilters;
 }
 
-const useBi = <t>(
-    body: Request,
-    route: string,
-) => {
+const useBi = <t>(body: Request, route: string) => {
     const api = useApi();
     const isObj = body.options.obj !== undefined ? body.options.obj : true;
 
