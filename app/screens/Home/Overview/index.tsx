@@ -13,16 +13,10 @@ import {useTrends} from 'app/util/hooks/libBi';
 
 interface DashboardScreensProps {}
 
-// const progressData = {
-//     labels: [], // optional
-//     data: [0.6],
-// };
-
 const DashboardScreens: FC<DashboardScreensProps> = _ => {
     const cards:any = {};
     const {activeFilters: filters} = useGlobalFilters();
 
-    // if(filtersLoading)return(<></>);
 
     const trends = useTrends({
         filters,
@@ -41,7 +35,6 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
 
     const renderItem = ({item, index}: any) => {
         return <DataCard item={{ key:item,data:trends[item] }} cards={cards[index]} />;
-        // return <View>{cards[index] && <Text>Hai i have cards lol</Text>}</View>;
     };
 
     return (
