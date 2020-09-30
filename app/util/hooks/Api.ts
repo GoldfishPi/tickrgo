@@ -1,9 +1,9 @@
 import axios from 'axios';
 import {useEnv} from 'app/util';
+import {useMemo} from 'react';
 
-export const useApi = () => {
-    const {apiUrl, apiToken} = useEnv();
-    const api = axios.create({
+const createApi = (apiUrl: string, apiToken: string | boolean) => {
+    return axios.create({
         baseURL: apiUrl,
         headers: {
             common: {
@@ -11,6 +11,10 @@ export const useApi = () => {
             },
         },
     });
+};
 
+export const useApi = () => {
+    const {apiUrl, apiToken} = useEnv();
+    const api = useMemo(() => createApi(apiUrl, apiToken), [apiUrl, apiToken]);
     return api;
 };
