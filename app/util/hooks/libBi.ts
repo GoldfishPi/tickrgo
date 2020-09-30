@@ -1,19 +1,10 @@
-import {RequestOptions, SearchFilters, ParsedObject, ParsedData} from 'lib-bi';
+import {RequestOptions, SearchFilters, ParsedObject} from 'lib-bi';
 import {useApi} from './Api';
 import {Trend} from 'lib-bi/dist/models/trends/types';
 import {useState} from 'react';
 
 interface Request {
     options: RequestOptions;
-    filters: SearchFilters;
-}
-
-interface CardOptions extends RequestOptions {
-    types: string[];
-}
-
-interface CardRequest {
-    options: CardOptions;
     filters: SearchFilters;
 }
 
@@ -44,7 +35,10 @@ const useTrends = (body: Request) => {
     return useBi<Trend>(body, 'trends');
 };
 
-const useCards = (filters: SearchFilters, types: string[]):[ParsedObject<any>, () => Promise<void>] => {
+const useCards = (
+    filters: SearchFilters,
+    types: string[],
+): [ParsedObject<any>, () => Promise<void>] => {
     const api = useApi();
     const [fetchedData, setFetchedData] = useState<ParsedObject<any>>({});
 
