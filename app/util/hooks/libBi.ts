@@ -25,16 +25,21 @@ const makeRequest = async <t>(
     });
     return data;
 };
-const useBi = <t>(body: Request, route: string, defaultData: any = {}) => {
+const useBi = <t>(body: Request, route: string, defaultData: any = {}):[t, boolean] => {
     const api = useApi();
+    const [loading, setLoading] = useState(false);
 
     const [data, setData] = useState<t>(defaultData);
 
     useDeepCompareEffect(() => {
-        makeRequest<t>(route, api, body).then((d) => setData(d));
+        setLoading(true);
+        makeRequest<t>(route, api, body).then((d) => {
+            setData(d);
+            setLoading(false);
+        });
     }, [body]);
 
-    return data;
+    return [data, loading];
 };
 
 const useTrends = (body: Request) => {

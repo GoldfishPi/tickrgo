@@ -18,7 +18,7 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
     const {activeFilters: filters} = useGlobalFilters();
 
 
-    const trends = useTrends({
+    const [trends] = useTrends({
         filters,
         options: {
             mixins: [
@@ -30,7 +30,7 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
 
     });
 
-    const cards = useCards(filters, ['newsroom', 'tweets', 'reddit']);
+    const [cards] = useCards(filters, ['newsroom', 'tweets', 'reddit']);
 
     const screenWidth = Dimensions.get('screen').width;
 
