@@ -1,4 +1,5 @@
 import {useReducer} from 'react';
+import {SearchFilters as ActiveFilters} from 'lib-bi';
 
 type FilterType = 'checkbox' | 'radio';
 type FilterValues = Array<{
@@ -12,10 +13,6 @@ type AvailableFilter = {
     values: FilterValues;
 };
 export type AvailableFilters = AvailableFilter[];
-
-export type ActiveFilters = {
-    [key: string]: string;
-};
 
 type FilterDefs = {
     [key: string]: {
