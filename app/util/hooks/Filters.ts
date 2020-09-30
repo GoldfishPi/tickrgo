@@ -22,6 +22,8 @@ type FilterDefs = {
     };
 };
 
+type FilterTypes = Array<keyof ActiveFilters>;
+
 export type Action =
     | {
           type: 'SET_ACTIVE_FILTERS';
@@ -33,11 +35,11 @@ export type Action =
       }
     | {
           type: 'SET_ENABLED_FILTERS';
-          payload: string[];
+          payload: FilterTypes;
       }
     | {
           type: 'FETCH_AVAILABLE_FILTERS_REQUEST';
-          payload: string[];
+          payload: FilterTypes;
       }
     | {
           type: 'FETCH_AVAILABLE_FILTERS_SUCCESS';
@@ -54,7 +56,7 @@ export type State = {
     loading: boolean;
     activeFilters: ActiveFilters;
     availableFilters: AvailableFilter[];
-    enabledFilters: string[];
+    enabledFilters: FilterTypes;
 };
 
 const filterDefs: FilterDefs = {
@@ -89,7 +91,9 @@ const filterDefs: FilterDefs = {
 
 const defaultState: State = {
     loading: false,
-    activeFilters: {},
+    activeFilters: {
+        dates: 'now-7d/d',
+    },
     availableFilters: [],
     enabledFilters: [],
 };
@@ -126,9 +130,11 @@ const useFilters = () => {
         }
     };
 
-    const fetchAvailableFilters = async (enabledFilters: string[]) => {
+    const fetchAvailableFilters = async (enabledFilters: FilterTypes) => {
         let newAvailableFilters: AvailableFilters = [];
-        let newActiveFilters: ActiveFilters = {};
+        let newActiveFilters: ActiveFilters = {
+            dates: 'now-7d/d',
+        };
         for (let name of enabledFilters) {
             const def = filterDefs[name];
             const values = def ? await def.values() : [];
@@ -165,16 +171,17 @@ const useFilters = () => {
 
         // -- Check if each activeFilters value exists on availableFilters
         for (let key in newActiveFilters) {
+            const realKey: keyof ActiveFilters = key as any;
             const filter = availableFilters.find((f) => f.name === key);
             if (!filter) {
                 continue;
             }
             const availableValues = filter.values.map((v) => v.val);
-            const values = newActiveFilters[key]
+            const values = newActiveFilters[realKey]
                 .split(',')
-                .filter((v) => availableValues.find((a) => a === v))
+                .filter((v:any) => availableValues.find((a) => a === v))
                 .toString();
-            newActiveFilters[key] = values;
+            newActiveFilters[realKey] = values;
         }
 
         dispatch({
