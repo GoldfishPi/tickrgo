@@ -27,12 +27,16 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
 
     // if(filtersLoading)return(<></>);
 
-    const [trends, fetchTrends] = useTrends(filters,{
-        mixins: [
-            {type: 'newsVolume'},
-            {type: 'twitterVolume'},
-            {type: 'redditVolume'},
-        ]
+    const [trends, fetchTrends] = useTrends({
+        filters,
+        options: {
+            mixins: [
+                {type: 'newsVolume'},
+                {type: 'twitterVolume'},
+                {type: 'redditVolume'},
+            ]
+        }
+
     });
 
 
@@ -81,16 +85,16 @@ const DataCard = ({item, cards}: any) => {
     useEffect(() => {
         switch (item.key) {
             case 'newsVolume':
-                setColor(theme.news);
+            setColor(theme.news);
                 break;
             case 'redditVolume':
-                setColor(theme.reddit);
+            setColor(theme.reddit);
                 break;
             case 'twitterVolume':
-                setColor(theme.twitter);
+            setColor(theme.twitter);
                 break;
             default:
-                setColor(theme.twitter);
+            setColor(theme.twitter);
                 break;
         }
     }, []);
@@ -111,16 +115,16 @@ const DataCard = ({item, cards}: any) => {
                         key={card.id}
                     />
                 ))}
-            {cards &&
-                cards.type === 'news' &&
-                cards.data.map((card: any) => (
-                    <NewsCard cluster={card} key={card.clusterId} />
-                ))}
-            {cards &&
-                cards.type === 'reddit' &&
-                cards.data.map((card: any) => (
-                    <RedditCard card={card} key={card.id} />
-                ))}
+    {cards &&
+            cards.type === 'news' &&
+            cards.data.map((card: any) => (
+                <NewsCard cluster={card} key={card.clusterId} />
+            ))}
+    {cards &&
+            cards.type === 'reddit' &&
+            cards.data.map((card: any) => (
+                <RedditCard card={card} key={card.id} />
+            ))}
         </ScrollView>
     );
 };
