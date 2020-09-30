@@ -22,12 +22,11 @@ interface DashboardScreensProps {}
 const DashboardScreens: FC<DashboardScreensProps> = _ => {
     const api = useApi();
     const [cards, setCards] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
     const {activeFilters: filters, loading:filtersLoading} = useGlobalFilters();
 
     // if(filtersLoading)return(<></>);
 
-    const [trends, fetchTrends] = useTrends({
+    const trends = useTrends({
         filters,
         options: {
             mixins: [
@@ -40,28 +39,12 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
     });
 
 
-    // useEffect(() => {
-    //     setLoading(true);
-    //     if (!filters) {
-    //         return;
-    //     }
-    //     Promise.all([
-    //         fetchTrends(),
-    //     ])
-    //         .then(() => setLoading(false))
-    //         .catch((e) => console.error(e));
-    // }, [filters]);
-
     const screenWidth = Dimensions.get('screen').width;
 
     const renderItem = ({item, index}: any) => {
         return <DataCard item={{ key:item,data:trends[item] }} cards={cards[index]} />;
         // return <View>{cards[index] && <Text>Hai i have cards lol</Text>}</View>;
     };
-
-    if (loading) {
-        return <LoadingSpinner />;
-    }
 
     return (
         <>
