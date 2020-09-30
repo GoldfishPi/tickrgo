@@ -98,6 +98,67 @@ const defaultState: State = {
     enabledFilters: [],
 };
 
+const fetchAvailableFilters = async (
+    enabledFilters: FilterTypes,
+    activeFilters: ActiveFilters,
+    availableFilters: AvailableFilters,
+): Promise<[ActiveFilters, AvailableFilters]> => {
+    let newAvailableFilters: AvailableFilters = [];
+    let newActiveFilters: ActiveFilters = {
+        dates: 'now-7d/d',
+    };
+    for (let name of enabledFilters) {
+        const def = filterDefs[name];
+        const values = def ? await def.values() : [];
+        newAvailableFilters = [
+            ...newAvailableFilters,
+            {
+                name,
+                values,
+                type: def.type,
+            },
+        ];
+    }
+
+    // -- If filter doesn't exist on activeFilters apply the default values
+    for (let name of enabledFilters) {
+        if (!activeFilters[name]) {
+            const availableFilter = newAvailableFilters.find(
+                (n) => n.name === name,
+            );
+            const defaultValues = !availableFilter
+                ? ''
+                : availableFilter.values
+                      .filter((v) => v.default)
+                      .map((v) => v.val)
+                      .toString();
+            newActiveFilters = {
+                ...newActiveFilters,
+                [name]: defaultValues,
+            };
+        } else {
+            newActiveFilters[name] = activeFilters[name];
+        }
+    }
+
+    // -- Check if each activeFilters value exists on availableFilters
+    for (let key in newActiveFilters) {
+        const realKey: keyof ActiveFilters = key as any;
+        const filter = availableFilters.find((f) => f.name === key);
+        if (!filter) {
+            continue;
+        }
+        const availableValues = filter.values.map((v) => v.val);
+        const values = newActiveFilters[realKey]
+            .split(',')
+            .filter((v: any) => availableValues.find((a) => a === v))
+            .toString();
+        newActiveFilters[realKey] = values;
+    }
+
+    return [newActiveFilters, newAvailableFilters];
+};
+
 const useFilters = () => {
     const reducer = (state: State, action: Action): State => {
         switch (action.type) {
@@ -107,7 +168,20 @@ const useFilters = () => {
                     activeFilters: action.payload,
                 };
             case 'FETCH_AVAILABLE_FILTERS_REQUEST':
-                fetchAvailableFilters(action.payload);
+                fetchAvailableFilters(
+                    action.payload,
+                    activeFilters,
+                    availableFilters,
+                ).then(([newActiveFilters, newAvailableFilters]) => {
+                    dispatch({
+                        type: 'FETCH_AVAILABLE_FILTERS_SUCCESS',
+                        payload: {
+                            activeFilters: newActiveFilters,
+                            availableFilters: newAvailableFilters,
+                        },
+                    });
+                });
+
                 return {
                     ...state,
                     enabledFilters: action.payload,
@@ -128,69 +202,6 @@ const useFilters = () => {
             default:
                 return state;
         }
-    };
-
-    const fetchAvailableFilters = async (enabledFilters: FilterTypes) => {
-        let newAvailableFilters: AvailableFilters = [];
-        let newActiveFilters: ActiveFilters = {
-            dates: 'now-7d/d',
-        };
-        for (let name of enabledFilters) {
-            const def = filterDefs[name];
-            const values = def ? await def.values() : [];
-            newAvailableFilters = [
-                ...newAvailableFilters,
-                {
-                    name,
-                    values,
-                    type: def.type,
-                },
-            ];
-        }
-
-        // -- If filter doesn't exist on activeFilters apply the default values
-        for (let name of enabledFilters) {
-            if (!activeFilters[name]) {
-                const availableFilter = newAvailableFilters.find(
-                    (n) => n.name === name,
-                );
-                const defaultValues = !availableFilter
-                    ? ''
-                    : availableFilter.values
-                          .filter((v) => v.default)
-                          .map((v) => v.val)
-                          .toString();
-                newActiveFilters = {
-                    ...newActiveFilters,
-                    [name]: defaultValues,
-                };
-            } else {
-                newActiveFilters[name] = activeFilters[name];
-            }
-        }
-
-        // -- Check if each activeFilters value exists on availableFilters
-        for (let key in newActiveFilters) {
-            const realKey: keyof ActiveFilters = key as any;
-            const filter = availableFilters.find((f) => f.name === key);
-            if (!filter) {
-                continue;
-            }
-            const availableValues = filter.values.map((v) => v.val);
-            const values = newActiveFilters[realKey]
-                .split(',')
-                .filter((v:any) => availableValues.find((a) => a === v))
-                .toString();
-            newActiveFilters[realKey] = values;
-        }
-
-        dispatch({
-            type: 'FETCH_AVAILABLE_FILTERS_SUCCESS',
-            payload: {
-                activeFilters: newActiveFilters,
-                availableFilters: newAvailableFilters,
-            },
-        });
     };
 
     const [
