@@ -22,12 +22,11 @@ interface DashboardScreensProps {}
 
 const DashboardScreens: FC<DashboardScreensProps> = _ => {
     const api = useApi();
-    const [data, setData] = useState<ParsedObject<Trend>>({});
-    const [cards, setCards] = useState<any[]>([]);
+    // const [cards, setCards] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
     const {activeFilters: filters} = useGlobalFilters();
 
-    const fetchTrends = useTrends({
+    const [trends, fetchTrends] = useTrends({
         filters,
         options: {
             mixins: [
