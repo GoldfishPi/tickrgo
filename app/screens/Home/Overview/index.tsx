@@ -10,6 +10,7 @@ import {useTranslation} from 'react-i18next';
 import {Dimensions, ScrollView, View} from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import {useTrends, useCards} from 'app/util/hooks/libBi';
+import {ParsedData} from 'lib-bi';
 
 interface DashboardScreensProps {}
 
@@ -29,8 +30,7 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
 
     });
 
-    const cards = useCards(filters, ['newsroom']);
-
+    const cards = useCards(filters, ['newsroom', 'tweets', 'reddit']);
 
     const screenWidth = Dimensions.get('screen').width;
 
@@ -52,7 +52,7 @@ const DashboardScreens: FC<DashboardScreensProps> = _ => {
     );
 };
 
-const DataCard = ({item, cards}: any) => {
+const DataCard = ({item, cards}: {item:any, cards:ParsedData[]}) => {
     const {theme} = useTheme();
     const {t} = useTranslation();
     const {navigate} = useNavigation();
@@ -73,17 +73,20 @@ const DataCard = ({item, cards}: any) => {
                 break;
         }
     }, []);
+    const newsCards = cards.find(p => p.type === 'news');
+    const tweetCards = cards.find(p => p.type === 'tweets');
+    const redditCards = cards.find(p => p.type === 'reddit');
     return (
         <ScrollView>
             <GoalCard color={color} title={t(item.key)} trend={item.data.primary} />
             {cards &&
-                cards.type === 'tweets' &&
-                cards.data.map((card: any) => (
+                item.key === 'twitterVolume' &&
+                tweetCards?.data.map((card: any) => (
                     <TweetCard
                         card={card}
                         onMore={() =>
                             navigate('CardReport', {
-                                type: cards.type,
+                                type: 'tweet',
                                 card,
                             })
                         }
@@ -92,13 +95,12 @@ const DataCard = ({item, cards}: any) => {
                 ))}
     {cards &&
             item.key === 'newsVolume' &&
-            cards?.news?.primary && 
-            cards.news.primary.map((card: any) => (
+            newsCards?.data.map((card: any) => (
                 <NewsCard cluster={card} key={card.clusterId} />
             ))}
     {cards &&
-            cards.type === 'reddit' &&
-            cards.data.map((card: any) => (
+            item.key === 'redditVolume' &&
+            redditCards?.data.map((card: any) => (
                 <RedditCard card={card} key={card.id} />
             ))}
         </ScrollView>
